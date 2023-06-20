@@ -1,9 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { storeToken, deleteToken } from "../redux/tokenActions";
+import { storeUser, deleteUser } from "../redux/userActions";
 
 const Navbar = () => {
   const logout = () => {
-    console.log("log out");
+    console.log("logout");
   };
   return (
     <div>
