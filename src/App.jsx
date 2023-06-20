@@ -8,12 +8,10 @@ import Login from "./pages/Login";
 import Receipts from "./pages/Receipts";
 import Tasks from "./pages/Tasks";
 import "./App.css";
-import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
-      <Navbar></Navbar>
       <Routes>
         <Route path="/" element={<Customers />} />
         <Route path="/login" element={<Login />} />

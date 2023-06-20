@@ -1,0 +1,41 @@
+.customerBoard {
+  background-color: rgb(242, 242, 242);
+  width: 100%;
+  border: 2px solid rgb(131, 131, 131);
+  table-layout: fixed;
+}
+.tablecontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+}
+.trBoard {
+  margin: 100px 0;
+  border: 1px solid rgb(164, 164, 164);
+}
+
+.thBoard,
+.tdBoard {
+  padding: 10px;
+  border: 1px solid rgb(164, 164, 164);
+}
+
+.tdacciones,
+.thacciones {
+  width: 250px;
+}
+.thacciones {
+  padding-left: 20px;
+}
+
+.actions {
+  border: none;
+  background-color: transparent;
+  padding: 0 10px;
+}
+
+.actions img {
+  height: 30px;
+  margin-right: 5px;
+}

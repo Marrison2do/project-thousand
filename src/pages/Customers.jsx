@@ -1,12 +1,22 @@
 import React from "react";
-import Boards from "../components/Boards";
+import CustomerBoard from "../components/CustomerBoard/CustomerBoard";
+import Navbar from "../components/Navbar";
 
 function Customers() {
+  // const isLogged = useSelector((state) => state.token.value) !== "";
+
   return (
-    <div>
-      Customers
-      <Boards></Boards>
-    </div>
+    <>
+      {/* {!isLogged ? (
+        <Navigate to="/" replace={true} />
+      ) : ( */}
+      <div>
+        <Navbar></Navbar>
+        Customers
+        <CustomerBoard></CustomerBoard>
+      </div>
+      {/* )} */}
+    </>
   );
 }
 
