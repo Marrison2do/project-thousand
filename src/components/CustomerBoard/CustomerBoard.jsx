@@ -30,60 +30,28 @@ function Boards() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const res = {
-  //   list: [
-  //     {
-  //       debtUyu: 1030,
-  //       debtUsd: 0,
-  //       archive: false,
-  //       _id: "63e839734381e44690ecddb8",
-  //       name: "Santilin",
-  //       phoneNumber: "091 400 576",
-  //       description: "el pibardo fuma faso",
-  //       createdAt: "2023-02-12T00:57:23.626Z",
-  //     },
-  //     {
-  //       debtUyu: 1780,
-  //       debtUsd: 2240,
-  //       archive: false,
-  //       _id: "63e822c70a4afd258cade455",
-  //       name: "Kassaking",
-  //       phoneNumber: "099 343 432",
-  //       description: "el pibe que tiene un tatuaje rojo",
-  //       createdAt: "2023-02-11T23:20:39.972Z",
-  //       company: "63e9959577197040f80ffa2d",
-  //     },
-  //     {
-  //       debtUyu: 25200,
-  //       debtUsd: 4100,
-  //       archive: false,
-  //       _id: "63e821290a4afd258cade448",
-  //       name: "cliente zero",
-  //       phoneNumber: "099 744 089",
-  //       description: "testendo maraca negro merquero",
-  //       createdAt: "2023-02-11T23:13:45.361Z",
-  //     },
-  //   ],
-  //   nbHits: 3,
-  // };
-
   return (
     <div className="tablecontainer">
       <table className="customerBoard">
         <tr className="trBoard">
-          <th className="thBoard">name</th>
-          <th className="thBoard">description</th>
-          <th className="thBoard">phoneNumber</th>
+          <th className="thBoard">Nombre</th>
+          <th className="thBoard">Deuda Pesos</th>
+          <th className="thBoard">Deuda Dolares</th>
+          <th className="thBoard">Descripcion</th>
+          <th className="thBoard">Telefono</th>
           <th className="thBoard thacciones">Acciones</th>
         </tr>
         {customers ? (
           <>
             {customers.list.map((item, index) => {
+              const { name, description, debtUyu, debtUsd, phoneNumber } = item;
               return (
                 <tr className="trBoard" key={index}>
-                  <td className="tdBoard">{item.name}</td>
-                  <td className="tdBoard">{item.description}</td>
-                  <td className="tdBoard">{item.phoneNumber}</td>
+                  <td className="tdBoard">{name}</td>
+                  <td className="tdBoard">{debtUyu}</td>
+                  <td className="tdBoard">{debtUsd}</td>
+                  <td className="tdBoard">{description}</td>
+                  <td className="tdBoard">{phoneNumber}</td>
                   <td className="tdBoard tdacciones">
                     <button className="actions">
                       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABaUlEQVR4nO2ZPU7DQBBGH0WchgMkCtyDFBwALkEHBXCBnAR3OUDqHIDCpAoFOUIUeqAApGiRpS2iVZzYO7trI82TRrIsee3P86P1Z1AURfmvXAFbwASOL2ABPABZbBGTCALMTrwCI8kD3tqo4gSYRRax9M3EGPixUR5XcQq8RRZx3/Thh8BmZ4GNPZeCM2DuCHhpskCZrmLPWyhSNJXl3Ln3Bw3ID6RySjqME7W4q1GPh5q6VQFj4LuGgF/gsmsCBsC6wVR4l87nkAJ6wLPHaCsnQ78LAnLBfJ52rYmDLiDEqAA0AyKMlhBaQiKMlhBaQiKMlhBaQrXIBZvJpy5koOe5nS+ObedTltAgxgdV6h64CP1J20YT34Q0FdqaQrlv07p8OheXjlkKslDG2sJZYG4dsxQMQ1ibj4L5XCdW1hiWmsuV9K0/H1PEzFr0vvb+UUYJREyITGZ/9xR7GjtEbIHr2CIURVGIwh9yPADS8g3VIwAAAABJRU5ErkJggg=="></img>
