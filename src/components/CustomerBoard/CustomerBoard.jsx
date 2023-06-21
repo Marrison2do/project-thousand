@@ -3,6 +3,7 @@ import "./customerBoard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
@@ -34,17 +35,65 @@ function Boards() {
     <div className="tablecontainer">
       <table className="customerBoard">
         <tr className="trBoard">
-          <th className="thBoard">Nombre</th>
-          <th className="thBoard">Deuda Pesos</th>
-          <th className="thBoard">Deuda Dolares</th>
-          <th className="thBoard">Descripcion</th>
-          <th className="thBoard">Telefono</th>
-          <th className="thBoard thacciones">Acciones</th>
+          <th className="thBoard">
+            <h5>Nombre</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard">
+            <h5>Deuda Pesos</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard">
+            <h5>Deuda Dolares</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard">
+            <h5>Descripcion</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard">
+            <h5>Telefono</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard">
+            <h5>actualizado</h5>
+            <FaArrowUp />
+            <FaArrowDown />
+            <FaFilter />
+          </th>
+          <th className="thBoard thacciones">
+            <h5>Acciones</h5>
+          </th>
         </tr>
         {customers ? (
           <>
             {customers.list.map((item, index) => {
-              const { name, description, debtUyu, debtUsd, phoneNumber } = item;
+              const {
+                name,
+                description,
+                debtUyu,
+                debtUsd,
+                phoneNumber,
+                updatedAt,
+              } = item;
+              function dateHandler(date) {
+                const parsedDate = date.split("-");
+                const year = parsedDate[0];
+                const month = parsedDate[1];
+                const day = parsedDate[2].substr(0, 2);
+                return `${day}/${month}/${year}`;
+              }
+              const dateResult = dateHandler(updatedAt);
               return (
                 <tr className="trBoard" key={index}>
                   <td className="tdBoard">{name}</td>
@@ -52,6 +101,7 @@ function Boards() {
                   <td className="tdBoard">{debtUsd}</td>
                   <td className="tdBoard">{description}</td>
                   <td className="tdBoard">{phoneNumber}</td>
+                  <td className="tdBoard">{dateResult}</td>
                   <td className="tdBoard tdacciones">
                     <button className="actions">
                       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABaUlEQVR4nO2ZPU7DQBBGH0WchgMkCtyDFBwALkEHBXCBnAR3OUDqHIDCpAoFOUIUeqAApGiRpS2iVZzYO7trI82TRrIsee3P86P1Z1AURfmvXAFbwASOL2ABPABZbBGTCALMTrwCI8kD3tqo4gSYRRax9M3EGPixUR5XcQq8RRZx3/Thh8BmZ4GNPZeCM2DuCHhpskCZrmLPWyhSNJXl3Ln3Bw3ID6RySjqME7W4q1GPh5q6VQFj4LuGgF/gsmsCBsC6wVR4l87nkAJ6wLPHaCsnQ78LAnLBfJ52rYmDLiDEqAA0AyKMlhBaQiKMlhBaQiKMlhBaQrXIBZvJpy5koOe5nS+ObedTltAgxgdV6h64CP1J20YT34Q0FdqaQrlv07p8OheXjlkKslDG2sJZYG4dsxQMQ1ibj4L5XCdW1hiWmsuV9K0/H1PEzFr0vvb+UUYJREyITGZ/9xR7GjtEbIHr2CIURVGIwh9yPADS8g3VIwAAAABJRU5ErkJggg=="></img>
