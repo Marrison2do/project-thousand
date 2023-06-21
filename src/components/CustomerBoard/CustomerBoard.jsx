@@ -7,6 +7,8 @@ import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
+  const [sort, setSort] = useState("updatedAt");
+  const [filters, setFilters] = useState("");
   const token = useSelector((state) => state.token.value);
 
   async function getCustomers() {
@@ -14,7 +16,7 @@ function Boards() {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers`,
+        baseURL: `http://localhost:5000/api/v1/customers?sort=${sort}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -37,44 +39,48 @@ function Boards() {
     const day = parsedDate[2].substr(0, 2);
     return `${day}/${month}/${year}`;
   }
+  function sorter(param) {
+    setSort(param);
+    getCustomers();
+  }
   return (
     <div className="tablecontainer">
       <table className="customerBoard">
         <tr className="trBoard">
           <th className="thBoard">
             <h5>Nombre</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-name")} />
+            <FaArrowDown onClick={() => sorter("name")} />
             <FaFilter />
           </th>
           <th className="thBoard">
             <h5>Deuda Pesos</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-debtUyu")} />
+            <FaArrowDown onClick={() => sorter("debtUyu")} />
             <FaFilter />
           </th>
           <th className="thBoard">
             <h5>Deuda Dolares</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-debtUsd")} />
+            <FaArrowDown onClick={() => sorter("debtUsd")} />
             <FaFilter />
           </th>
           <th className="thBoard">
             <h5>Descripcion</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-description")} />
+            <FaArrowDown onClick={() => sorter("description")} />
             <FaFilter />
           </th>
           <th className="thBoard">
             <h5>Telefono</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-phoneNumber")} />
+            <FaArrowDown onClick={() => sorter("phoneNumber")} />
             <FaFilter />
           </th>
           <th className="thBoard">
             <h5>actualizado</h5>
-            <FaArrowUp />
-            <FaArrowDown />
+            <FaArrowUp onClick={() => sorter("-updatedAt")} />
+            <FaArrowDown onClick={() => sorter("updatedAt")} />
             <FaFilter />
           </th>
           <th className="thBoard thacciones">
