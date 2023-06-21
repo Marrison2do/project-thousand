@@ -31,7 +31,7 @@ function Boards() {
   useEffect(() => {
     getCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sort]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
     const year = parsedDate[0];
@@ -41,7 +41,6 @@ function Boards() {
   }
   function sorter(param) {
     setSort(param);
-    getCustomers();
   }
   return (
     <div className="tablecontainer">
