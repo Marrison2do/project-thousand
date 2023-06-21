@@ -30,7 +30,13 @@ function Boards() {
     getCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  function dateHandler(date) {
+    const parsedDate = date.split("-");
+    const year = parsedDate[0];
+    const month = parsedDate[1];
+    const day = parsedDate[2].substr(0, 2);
+    return `${day}/${month}/${year}`;
+  }
   return (
     <div className="tablecontainer">
       <table className="customerBoard">
@@ -86,13 +92,7 @@ function Boards() {
                 phoneNumber,
                 updatedAt,
               } = item;
-              function dateHandler(date) {
-                const parsedDate = date.split("-");
-                const year = parsedDate[0];
-                const month = parsedDate[1];
-                const day = parsedDate[2].substr(0, 2);
-                return `${day}/${month}/${year}`;
-              }
+
               const dateResult = dateHandler(updatedAt);
               return (
                 <tr className="trBoard" key={index}>
