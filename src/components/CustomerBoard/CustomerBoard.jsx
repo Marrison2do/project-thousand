@@ -9,6 +9,12 @@ function Boards() {
   const [customers, setCustomers] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
+  const [name, setName] = useState("");
+  const [numericFilters, setNumericFilters] = useState("");
+  const [description, setDescription] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [updatedAt, setUpdatedAt] = useState("");
+
   const token = useSelector((state) => state.token.value);
 
   async function getCustomers() {
@@ -31,7 +37,15 @@ function Boards() {
   useEffect(() => {
     getCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort]);
+  }, [filters, sort]);
+
+  function filter(target) {
+    target;
+    setFilters(name + numericFilters + description + phoneNumber + updatedAt);
+  }
+  useEffect(() => {
+    filter();
+  }, [name, numericFilters, description, phoneNumber, updatedAt]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
     const year = parsedDate[0];
@@ -42,6 +56,7 @@ function Boards() {
   function sorter(param) {
     setSort(param);
   }
+
   return (
     <div className="tablecontainer">
       <table className="customerBoard">
