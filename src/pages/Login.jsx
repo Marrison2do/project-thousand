@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { storeToken, deleteToken } from "../redux/tokenActions";
 import { storeUser, deleteUser } from "../redux/userActions";
+import "./login.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -41,26 +42,41 @@ function Login() {
   }
 
   return (
-    <div>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        onChange={(e) => setLoginUsername(e.target.value)}
-      />
-      <label htmlFor="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        onChange={(e) => setLoginPassword(e.target.value)}
-      />
-      <button
-        className="login-button"
-        onClick={() => login(loginUsername, loginPassword)}
-      >
-        Login
-      </button>
+    <div className="wrapper fadeInDown cardo">
+      <div id="formContent">
+        <div className="loginTitle m-3">
+          <h3>Login</h3>
+        </div>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          onChange={(e) => setLoginUsername(e.target.value)}
+          className="fadeIn second"
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          onChange={(e) => setLoginPassword(e.target.value)}
+          className="fadeIn third"
+          placeholder="password"
+        />
+        <button
+          className="login-button fadeIn fourth"
+          onClick={() => login(loginUsername, loginPassword)}
+        >
+          Login
+        </button>
+        {/* <input type="submit" className="fadeIn fourth" value="Log In" /> */}
+
+        <div id="formFooter">
+          <a className="underlineHover" href="#">
+            Forgot Password?
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

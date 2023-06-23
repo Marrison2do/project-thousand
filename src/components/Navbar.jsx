@@ -1,12 +1,17 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storeToken, deleteToken } from "../redux/tokenActions";
-import { storeUser, deleteUser } from "../redux/userActions";
+import { deleteToken } from "../redux/tokenActions";
+import { deleteUser } from "../redux/userActions";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const logout = () => {
-    console.log("logout");
+    dispatch(deleteToken());
+    dispatch(deleteUser());
+    navigate("/");
   };
   return (
     <div>
@@ -18,7 +23,7 @@ const Navbar = () => {
       <Link to="/checks">Cheques</Link>
       <div>
         <p>usuario</p>
-        <button onClick={logout}>Cerrar sesion</button>
+        <button onClick={() => logout()}>Cerrar sesion</button>
       </div>
     </div>
   );
