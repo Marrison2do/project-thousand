@@ -14,6 +14,15 @@ function Boards() {
   const [description, setDescription] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
+  const [toggleModal, setToggleModal] = useState(true);
+
+  function showModal(param) {
+    setToggleModal(true);
+  }
+
+  function closeModal() {
+    setToggleModal(false);
+  }
 
   const token = useSelector((state) => state.token.value);
 
