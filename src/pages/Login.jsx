@@ -42,7 +42,13 @@ function Login() {
   }
 
   return (
-    <div className="wrapper fadeInDown cardo">
+    <form
+      className="wrapper fadeInDown cardo"
+      onSubmit={() => {
+        event.preventDefault();
+        login(loginUsername, loginPassword);
+      }}
+    >
       <div id="formContent">
         <div className="loginTitle m-3">
           <h3>Login</h3>
@@ -63,12 +69,7 @@ function Login() {
           className="fadeIn third"
           placeholder="password"
         />
-        <button
-          className="login-button fadeIn fourth"
-          onClick={() => login(loginUsername, loginPassword)}
-        >
-          Login
-        </button>
+        <button className="login-button fadeIn fourth">Login</button>
         {/* <input type="submit" className="fadeIn fourth" value="Log In" /> */}
 
         <div id="formFooter">
@@ -77,7 +78,7 @@ function Login() {
           </a>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
