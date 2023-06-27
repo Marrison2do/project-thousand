@@ -2,14 +2,49 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { ImCheckmark } from "react-icons/im";
 import { FaFilter } from "react-icons/fa";
 
-function FilterModal(value) {
+function FilterModal({ value, name, nameState, nameState2 }) {
   const [show, setShow] = useState(false);
+  const [formValue, setFormValue] = useState("");
+  const [formValue2, setFormValue2] = useState("");
+  const [operator, setOperator] = useState(">");
+  let isNumber = false;
+  const handleClose = () => {
+    setShow(false);
+    if (value == "updatedAt") {
+      handleDate();
+      return;
+    }
+    if (isNumber) handleNumber();
+    if (!isNumber) handleString();
+  };
 
-  const handleClose = () => setShow(false);
+  const handleDate = () => {
+    nameState(`&olderUpdateThan=${formValue}`);
+    nameState2(`&newerUpdateThan=${formValue2}`);
+  };
+  const cleanQuery = () => {
+    if (nameState2) nameState2("");
+    nameState("");
+
+    setShow(false);
+  };
   const handleShow = () => {
-    setShow(true), console.log(value);
+    setShow(true);
+    setFormValue("");
+    setFormValue2("");
+  };
+
+  if (typeof value === "object") isNumber = true;
+
+  const handleNumber = () => {
+    nameState(`&numericFilters=${value.numericFilters}${operator}${formValue}`);
+  };
+
+  const handleString = () => {
+    nameState(`&${value}=${formValue}`);
   };
 
   return (
@@ -18,33 +53,96 @@ function FilterModal(value) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Filtrar por {name} </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="name@example.com"
-                autoFocus
-              />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+          {value == "updatedAt" ? (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
             >
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} />
-            </Form.Group>
-          </Form>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Antes de</Form.Label>
+                <Form.Control
+                  type="date"
+                  autoFocus
+                  onChange={(e) => setFormValue(e.target.value)}
+                />
+                <Form.Label>Despues de</Form.Label>
+                <Form.Control
+                  type="date"
+                  autoFocus
+                  onChange={(e) => setFormValue2(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          ) : isNumber ? (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
+            >
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>{name}</Form.Label>
+                <Form.Select onChange={(e) => setOperator(e.target.value)}>
+                  <option value=">"> Mayor a </option>
+                  <option value="<">Menor a</option>
+                </Form.Select>
+                <Form.Control
+                  type="number"
+                  autoFocus
+                  onChange={(e) => setFormValue(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          ) : (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
+            >
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>{name}</Form.Label>
+                <Form.Control
+                  type="text"
+                  autoFocus
+                  onChange={(e) => setFormValue(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="secondary" onClick={cleanQuery}>
+            Limpiar filtro
           </Button>
           <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Filtrar
           </Button>
         </Modal.Footer>
       </Modal>

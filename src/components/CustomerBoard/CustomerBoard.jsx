@@ -14,7 +14,8 @@ function Boards() {
   const [numericFilters, setNumericFilters] = useState("");
   const [description, setDescription] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [updatedAt, setUpdatedAt] = useState("");
+  const [newerUpdateThan, setNewerUpdateThan] = useState("");
+  const [olderUpdateThan, setOlderUpdateThan] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -34,6 +35,14 @@ function Boards() {
       console.log(error);
     }
   }
+  const cleanFilters = () => {
+    setName("");
+    setNumericFilters("");
+    setDescription("");
+    setPhoneNumber("");
+    setNewerUpdateThan("");
+    setOlderUpdateThan("");
+  };
 
   useEffect(() => {
     getCustomers();
@@ -42,11 +51,25 @@ function Boards() {
 
   function filter(target) {
     target;
-    setFilters(name + numericFilters + description + phoneNumber + updatedAt);
+    setFilters(
+      name +
+        numericFilters +
+        description +
+        phoneNumber +
+        newerUpdateThan +
+        olderUpdateThan
+    );
   }
   useEffect(() => {
     filter();
-  }, [name, numericFilters, description, phoneNumber, updatedAt]);
+  }, [
+    name,
+    numericFilters,
+    description,
+    phoneNumber,
+    newerUpdateThan,
+    olderUpdateThan,
+  ]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
     const year = parsedDate[0];
@@ -67,40 +90,62 @@ function Boards() {
               <h5>Nombre</h5>
               <FaArrowUp onClick={() => sorter("-name")} />
               <FaArrowDown onClick={() => sorter("name")} />
-              <FilterModal value="name" />
+              <FilterModal value="name" nameState={setName} name="Nombre" />
             </th>
             <th className="thBoard">
               <h5>Deuda Pesos</h5>
               <FaArrowUp onClick={() => sorter("-debtUyu")} />
               <FaArrowDown onClick={() => sorter("debtUyu")} />
-              <FilterModal />
+              <FilterModal
+                value={{ numericFilters: "debtUyu" }}
+                nameState={setNumericFilters}
+                name="Deuda Pesos"
+              />
             </th>
             <th className="thBoard">
               <h5>Deuda Dolares</h5>
               <FaArrowUp onClick={() => sorter("-debtUsd")} />
               <FaArrowDown onClick={() => sorter("debtUsd")} />
-              <FilterModal />
+              <FilterModal
+                nameState={setNumericFilters}
+                value={{ numericFilters: "debtUsd" }}
+                name="Deuda Dolares"
+              />
             </th>
             <th className="thBoard">
               <h5>Descripcion</h5>
               <FaArrowUp onClick={() => sorter("-description")} />
               <FaArrowDown onClick={() => sorter("description")} />
-              <FilterModal value="description" />
+              <FilterModal
+                nameState={setDescription}
+                value="description"
+                name="Descripción"
+              />
             </th>
             <th className="thBoard">
               <h5>Telefono</h5>
               <FaArrowUp onClick={() => sorter("-phoneNumber")} />
               <FaArrowDown onClick={() => sorter("phoneNumber")} />
-              <FilterModal value="" />
+              <FilterModal
+                value="phoneNumber"
+                name="Telefono"
+                nameState={setPhoneNumber}
+              />
             </th>
             <th className="thBoard">
               <h5>actualizado</h5>
               <FaArrowUp onClick={() => sorter("-updatedAt")} />
               <FaArrowDown onClick={() => sorter("updatedAt")} />
-              <FilterModal value="updatedAt" />
+              <FilterModal
+                value="updatedAt"
+                name="Fecha"
+                nameState={setNewerUpdateThan}
+                nameState2={setOlderUpdateThan}
+              />
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
+              <button onClick={cleanFilters}>limpiar filtros</button>
             </th>
           </tr>
         </thead>
