@@ -16,11 +16,20 @@
 
 .navbar .links .link {
   padding: 20px;
+  margin-left: 10px;
   text-decoration: none;
   color: black;
   font-weight: 500;
   font-size: 1.3rem;
 }
+
+.navbar .links .link:hover {
+  background-color: rgb(39, 171, 138);
+  border-radius: 40px;
+  transition: 300ms;
+  color: white;
+}
+
 .navbar .logout {
   display: flex;
   justify-content: center;

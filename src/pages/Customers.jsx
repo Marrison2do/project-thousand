@@ -14,7 +14,6 @@ function Customers() {
       ) : (
         <div>
           <Navbar></Navbar>
-          Customers
           <CustomerBoard></CustomerBoard>
         </div>
       )}
