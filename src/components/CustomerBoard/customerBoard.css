@@ -3,6 +3,8 @@
   width: 100%;
   border: 2px solid rgb(131, 131, 131);
   table-layout: fixed;
+  box-shadow: 10px 10px;
+  border-radius: 5px;
 }
 .tablecontainer {
   display: flex;

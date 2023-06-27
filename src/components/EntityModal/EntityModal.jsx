@@ -58,7 +58,7 @@ function EntityModal({ id }) {
                 </div>
                 <div className="singleData">
                   <h5>Cliente:</h5>
-                  <p>{task.customer}</p>
+                  <p>{task.customer.name}</p>
                 </div>
                 <div className="singleData">
                   <h5>Moneda:</h5>
@@ -70,7 +70,7 @@ function EntityModal({ id }) {
                 </div>
                 <div className="singleData">
                   <h5>Creado por:</h5>
-                  <p>{task.createdBy}</p>
+                  <p>{task.createdBy.name}</p>
                 </div>
                 <div className="singleData">
                   <h5>Feacha de creacion:</h5>

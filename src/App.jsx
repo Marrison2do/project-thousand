@@ -11,7 +11,7 @@ import "./App.css";
 
 function App() {
   return (
-    <>
+    <div className="app">
       <Routes>
         <Route path="/" element={<Customers />} />
         <Route path="/login" element={<Login />} />
@@ -21,7 +21,7 @@ function App() {
         <Route path="/receipts" element={<Receipts />} />
         <Route path="/tasks" element={<Tasks />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

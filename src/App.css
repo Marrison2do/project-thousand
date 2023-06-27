@@ -1,1 +1,13 @@
+html {
+  background-color: rgb(192, 198, 196);
+  /* min-height: 100vh; */
+}
 
+.app {
+  /* min-height: 100vh; */
+  background-color: rgb(39, 171, 138);
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
