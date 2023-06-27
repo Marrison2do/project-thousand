@@ -1,7 +1,13 @@
 import React from "react";
+import EntityModal from "../components/EntityModal/EntityModal";
 
 function Companies() {
-  return <div>Companies</div>;
+  return (
+    <div>
+      <EntityModal></EntityModal>
+      hola
+    </div>
+  );
 }
 
 export default Companies;
