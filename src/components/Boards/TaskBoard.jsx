@@ -1,5 +1,5 @@
 import React from "react";
-import "./customerBoard.css";
+import "./taskBoard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -13,21 +13,21 @@ function Boards() {
   const [customers, setCustomers] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
-  const [name, setName] = useState("");
+  const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
   const [description, setDescription] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [type, setType] = useState("");
   const [newerUpdateThan, setNewerUpdateThan] = useState("");
   const [olderUpdateThan, setOlderUpdateThan] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
-  async function getCustomers() {
+  async function getTasks() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -47,7 +47,7 @@ function Boards() {
   };
 
   useEffect(() => {
-    getCustomers();
+    getTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort]);
 
@@ -57,7 +57,7 @@ function Boards() {
       name +
         numericFilters +
         description +
-        phoneNumber +
+        type +
         newerUpdateThan +
         olderUpdateThan
     );
@@ -68,7 +68,7 @@ function Boards() {
     name,
     numericFilters,
     description,
-    phoneNumber,
+    type,
     newerUpdateThan,
     olderUpdateThan,
   ]);
@@ -89,29 +89,14 @@ function Boards() {
         <thead>
           <tr className="trBoard">
             <th className="thBoard">
-              <h5>Nombre</h5>
-              <FaArrowUp onClick={() => sorter("-name")} />
-              <FaArrowDown onClick={() => sorter("name")} />
-              <FilterModal value="name" nameState={setName} name="Nombre" />
-            </th>
-            <th className="thBoard">
-              <h5>Deuda Pesos</h5>
-              <FaArrowUp onClick={() => sorter("-debtUyu")} />
-              <FaArrowDown onClick={() => sorter("debtUyu")} />
+              <h5>fecha</h5>
+              <FaArrowUp onClick={() => sorter("-createdAt")} />
+              <FaArrowDown onClick={() => sorter("createdAt")} />
               <FilterModal
-                value={{ numericFilters: "debtUyu" }}
-                nameState={setNumericFilters}
-                name="Deuda Pesos"
-              />
-            </th>
-            <th className="thBoard">
-              <h5>Deuda Dolares</h5>
-              <FaArrowUp onClick={() => sorter("-debtUsd")} />
-              <FaArrowDown onClick={() => sorter("debtUsd")} />
-              <FilterModal
-                nameState={setNumericFilters}
-                value={{ numericFilters: "debtUsd" }}
-                name="Deuda Dolares"
+                value="createdAt"
+                name="Fecha"
+                nameState={setNewerUpdateThan}
+                nameState2={setOlderUpdateThan}
               />
             </th>
             <th className="thBoard">
@@ -125,24 +110,39 @@ function Boards() {
               />
             </th>
             <th className="thBoard">
-              <h5>Telefono</h5>
-              <FaArrowUp onClick={() => sorter("-phoneNumber")} />
-              <FaArrowDown onClick={() => sorter("phoneNumber")} />
+              <h5>Precio</h5>
+              <FaArrowUp onClick={() => sorter("-price")} />
+              <FaArrowDown onClick={() => sorter("price")} />
               <FilterModal
-                value="phoneNumber"
-                name="Telefono"
-                nameState={setPhoneNumber}
+                value={{ numericFilters: "price" }}
+                nameState={setNumericFilters}
+                name="precio"
               />
             </th>
             <th className="thBoard">
-              <h5>actualizado</h5>
-              <FaArrowUp onClick={() => sorter("-updatedAt")} />
-              <FaArrowDown onClick={() => sorter("updatedAt")} />
+              <h5>Moneda</h5>
+              <FaArrowUp onClick={() => sorter("-currency")} />
+              <FaArrowDown onClick={() => sorter("currency")} />
               <FilterModal
-                value="updatedAt"
-                name="Fecha"
-                nameState={setNewerUpdateThan}
-                nameState2={setOlderUpdateThan}
+                value="name"
+                nameState={setCurrency}
+                name="currency"
+              />
+            </th>
+            <th className="thBoard">
+              <h5>tipo</h5>
+              <FaArrowUp onClick={() => sorter("-type")} />
+              <FaArrowDown onClick={() => sorter("type")} />
+              <FilterModal value="type" name="tipo" nameState={setType} />
+            </th>
+            <th className="thBoard">
+              <h5>Cliente</h5>
+              <FaArrowUp onClick={() => sorter("-customer")} />
+              <FaArrowDown onClick={() => sorter("customer")} />
+              <FilterModal
+                nameState={setNumericFilters}
+                value="customer"
+                name="Cliente"
               />
             </th>
             <th className="thBoard thacciones">
@@ -158,23 +158,23 @@ function Boards() {
             <>
               {customers.list.map((item, index) => {
                 const {
-                  name,
                   description,
-                  debtUyu,
-                  debtUsd,
-                  phoneNumber,
-                  updatedAt,
+                  price,
+                  currency,
+                  customer,
+                  createdAt,
+                  type,
                 } = item;
 
-                const dateResult = dateHandler(updatedAt);
+                const dateResult = dateHandler(createdAt);
                 return (
                   <tr className="trBoard" key={index}>
-                    <td className="tdBoard">{name}</td>
-                    <td className="tdBoard">{debtUyu}</td>
-                    <td className="tdBoard">{debtUsd}</td>
-                    <td className="tdBoard">{description}</td>
-                    <td className="tdBoard">{phoneNumber}</td>
                     <td className="tdBoard">{dateResult}</td>
+                    <td className="tdBoard">{description}</td>
+                    <td className="tdBoard">{price}</td>
+                    <td className="tdBoard">{currency}</td>
+                    <td className="tdBoard">{type}</td>
+                    <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard tdacciones">
                       <BsEyeFill className="actions" />
                       <AiFillEdit className="actions" />

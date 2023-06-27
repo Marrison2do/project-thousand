@@ -41,13 +41,31 @@
 }
 
 .actions {
-  border: none;
-  background-color: transparent;
-  height: 25px;
-  width: 25px;
+  font-size: 48px;
+}
+.actions:hover {
+  color: white;
+  background-color: rgb(39, 171, 138);
+  transition: 300ms;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .actions img {
   height: 30px;
   margin-right: 5px;
+}
+
+.thBoard svg {
+  margin-right: 4px;
+  font-size: 18px;
+}
+.thBoard svg:hover {
+  color: rgb(39, 171, 138);
+  transition: 300ms;
+  cursor: pointer;
+}
+
+.thBoard h5 {
+  font-size: 16px;
 }
