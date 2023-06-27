@@ -11,3 +11,11 @@ html {
 body {
   font-family: "Poppins", sans-serif;
 }
+
+.appButton {
+  background-color: rgb(39, 171, 138);
+  padding: 8px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}

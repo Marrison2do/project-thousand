@@ -42,5 +42,10 @@
   margin: 0;
   color: rgb(0, 100, 130);
   font-weight: 500;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+}
+
+.logout p span {
+  color: gray;
+  font-size: 1.1rem;
 }

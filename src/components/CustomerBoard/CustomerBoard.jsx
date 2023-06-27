@@ -146,7 +146,9 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button onClick={cleanFilters}>limpiar filtros</button>
+              <button className="appButton" onClick={cleanFilters}>
+                limpiar filtros
+              </button>
             </th>
           </tr>
         </thead>

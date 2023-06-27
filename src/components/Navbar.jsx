@@ -9,6 +9,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user.value);
+
   const logout = () => {
     dispatch(deleteToken());
     dispatch(deleteUser());
@@ -37,8 +39,12 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="logout">
-        <p>usuario</p>
-        <button onClick={() => logout()}>Cerrar sesion</button>
+        <p>
+          <span>Logueado como:</span> {user.name}
+        </p>
+        <button className="appButton" onClick={() => logout()}>
+          Cerrar sesion
+        </button>
       </div>
     </div>
   );
