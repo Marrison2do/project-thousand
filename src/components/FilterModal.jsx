@@ -13,7 +13,7 @@ function FilterModal({ value, name, nameState, nameState2 }) {
   let isNumber = false;
   const handleClose = () => {
     setShow(false);
-    if (value == "updatedAt" || value == "createdAt") {
+    if (value == "updatedAt" || value == "createdAt" || value == "legalDate") {
       handleDate();
       return;
     }
@@ -26,7 +26,7 @@ function FilterModal({ value, name, nameState, nameState2 }) {
       nameState(`&olderUpdateThan=${formValue}`);
       nameState2(`&newerUpdateThan=${formValue2}`);
     }
-    if (value == "createdAt") {
+    if (value == "createdAt" || value == "legalDate") {
       nameState(`&olderThan=${formValue}`);
       nameState2(`&newerThan=${formValue2}`);
     }
@@ -63,7 +63,9 @@ function FilterModal({ value, name, nameState, nameState2 }) {
           <Modal.Title>Filtrar por {name} </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {value == "updatedAt" || value == "createdAt" ? (
+          {value == "updatedAt" ||
+          value == "createdAt" ||
+          value == "legalDate" ? (
             <Form
               onSubmit={() => {
                 event.preventDefault();
