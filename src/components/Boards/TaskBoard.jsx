@@ -10,15 +10,16 @@ import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
 
 function Boards() {
-  const [customers, setCustomers] = useState(null);
+  const [tasks, setTasks] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
-  const [newerUpdateThan, setNewerUpdateThan] = useState("");
-  const [olderUpdateThan, setOlderUpdateThan] = useState("");
+  const [newerThan, setNewerThan] = useState("");
+  const [olderThan, setOlderThan] = useState("");
+  const [customer, setCustomer] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -32,18 +33,19 @@ function Boards() {
           Authorization: "Bearer " + token,
         },
       });
-      setCustomers(response.data);
+      setTasks(response.data);
     } catch (error) {
       console.log(error);
     }
   }
   const cleanFilters = () => {
-    setName("");
+    setCustomer("");
     setNumericFilters("");
     setDescription("");
-    setPhoneNumber("");
-    setNewerUpdateThan("");
-    setOlderUpdateThan("");
+    setNewerThan("");
+    setOlderThan("");
+    setCurrency("");
+    setType("");
   };
 
   useEffect(() => {
@@ -54,23 +56,25 @@ function Boards() {
   function filter(target) {
     target;
     setFilters(
-      name +
+      customer +
         numericFilters +
         description +
         type +
-        newerUpdateThan +
-        olderUpdateThan
+        newerThan +
+        olderThan +
+        currency
     );
   }
   useEffect(() => {
     filter();
   }, [
-    name,
+    customer,
     numericFilters,
     description,
     type,
-    newerUpdateThan,
-    olderUpdateThan,
+    newerThan,
+    olderThan,
+    currency,
   ]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
@@ -95,8 +99,8 @@ function Boards() {
               <FilterModal
                 value="createdAt"
                 name="Fecha"
-                nameState={setNewerUpdateThan}
-                nameState2={setOlderUpdateThan}
+                nameState={setNewerThan}
+                nameState2={setOlderThan}
               />
             </th>
             <th className="thBoard">
@@ -124,9 +128,9 @@ function Boards() {
               <FaArrowUp onClick={() => sorter("-currency")} />
               <FaArrowDown onClick={() => sorter("currency")} />
               <FilterModal
-                value="name"
+                value="currency"
                 nameState={setCurrency}
-                name="currency"
+                name="moneda"
               />
             </th>
             <th className="thBoard">
@@ -140,7 +144,7 @@ function Boards() {
               <FaArrowUp onClick={() => sorter("-customer")} />
               <FaArrowDown onClick={() => sorter("customer")} />
               <FilterModal
-                nameState={setNumericFilters}
+                nameState={setCustomer}
                 value="customer"
                 name="Cliente"
               />
@@ -154,9 +158,9 @@ function Boards() {
           </tr>
         </thead>
         <tbody>
-          {customers ? (
+          {tasks ? (
             <>
-              {customers.list.map((item, index) => {
+              {tasks.list.map((item, index) => {
                 const {
                   description,
                   price,
