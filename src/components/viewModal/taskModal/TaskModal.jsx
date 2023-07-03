@@ -7,7 +7,6 @@ import "./taskModal.css";
 import axios from "axios";
 
 function EntityModal({ id }) {
-  console.log(id);
   const [show, setShow] = useState(false);
   const [task, setTask] = useState(null);
   const token = useSelector((state) => state.token.value);
