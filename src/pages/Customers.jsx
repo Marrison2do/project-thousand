@@ -1,5 +1,5 @@
 import React from "react";
-import CustomerBoard from "../components/CustomerBoard/CustomerBoard";
+import CustomerBoard from "../components/Boards/CustomerBoard";
 import Navbar from "../components/Navbar";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";

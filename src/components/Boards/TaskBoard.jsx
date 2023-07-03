@@ -8,10 +8,11 @@ import { BsEyeFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
+import TaskEditModal from "../EditModals/TaskEditModal";
 
 function Boards() {
   const [tasks, setTasks] = useState(null);
-  const [sort, setSort] = useState("updatedAt");
+  const [sort, setSort] = useState("createdAt");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
@@ -20,6 +21,7 @@ function Boards() {
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
   const [customer, setCustomer] = useState("");
+  const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -51,7 +53,7 @@ function Boards() {
   useEffect(() => {
     getTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sort]);
+  }, [filters, sort, data]);
 
   function filter(target) {
     target;
@@ -151,6 +153,7 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
+
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
@@ -168,6 +171,7 @@ function Boards() {
                   customer,
                   createdAt,
                   type,
+                  _id,
                 } = item;
 
                 const dateResult = dateHandler(createdAt);
@@ -181,7 +185,20 @@ function Boards() {
                     <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard tdacciones">
                       <BsEyeFill className="actions" />
-                      <AiFillEdit className="actions" />
+                      <TaskEditModal
+                        className="actions"
+                        props={{
+                          description,
+                          price,
+                          currency,
+                          customer,
+                          createdAt,
+                          type,
+                          _id,
+                        }}
+                        setData={setData}
+                      />
+                      {/* <AiFillEdit className="actions" /> */}
                       <MdDeleteForever className="actions" />
                     </td>
                   </tr>
