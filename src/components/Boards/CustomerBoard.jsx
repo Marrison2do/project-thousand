@@ -8,6 +8,7 @@ import { BsEyeFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
+import TaskModal from "../viewModal/taskModal/TaskModal.jsx";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
@@ -176,7 +177,7 @@ function Boards() {
                     <td className="tdBoard">{phoneNumber}</td>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard tdacciones">
-                      <BsEyeFill className="actions" />
+                      {/* <TaskModal id={item._id} className="actions" /> */}
                       <AiFillEdit className="actions" />
                       <MdDeleteForever className="actions" />
                     </td>

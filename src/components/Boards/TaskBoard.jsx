@@ -9,6 +9,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
 import TaskEditModal from "../EditModals/TaskEditModal";
+import TaskModal from "../viewModal/taskModal/TaskModal";
+import DeleteModal from "../DeleteModal";
 
 function Boards() {
   const [tasks, setTasks] = useState(null);
@@ -184,7 +186,7 @@ function Boards() {
                     <td className="tdBoard">{type}</td>
                     <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard tdacciones">
-                      <BsEyeFill className="actions" />
+                      <TaskModal id={item._id} className="actions" />
                       <TaskEditModal
                         className="actions"
                         props={{
@@ -199,7 +201,14 @@ function Boards() {
                         setData={setData}
                       />
                       {/* <AiFillEdit className="actions" /> */}
-                      <MdDeleteForever className="actions" />
+                      <DeleteModal
+                        className="actions"
+                        props={{
+                          collection: "tasks",
+                          _id,
+                        }}
+                        setData={setData}
+                      />
                     </td>
                   </tr>
                 );
