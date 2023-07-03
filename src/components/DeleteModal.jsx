@@ -35,7 +35,7 @@ function DeleteModal({ props, setData }) {
 
   return (
     <>
-      <MdDeleteForever onClick={handleShow} />
+      <MdDeleteForever className="actions" onClick={handleShow} />
 
       <Modal
         show={show}
