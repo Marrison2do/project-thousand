@@ -5,7 +5,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function DeleteModal(props) {
+function DeleteModal({ props, setData }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -17,17 +17,17 @@ function DeleteModal(props) {
 
   const token = useSelector((state) => state.token.value);
 
-  async function deleteTask(props) {
+  async function deleteTask() {
     try {
       const response = await axios({
-        method: "patch",
+        method: "delete",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
         baseURL: `http://localhost:5000/api/v1/${props.collection}/${props._id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      props.setData(response);
+      setData(response);
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +53,9 @@ function DeleteModal(props) {
           <Button variant="secondary" onClick={handleClose}>
             Conservar
           </Button>
-          <Button variant="primary">Eliminar</Button>
+          <Button variant="primary" onClick={deleteItem}>
+            Eliminar
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
