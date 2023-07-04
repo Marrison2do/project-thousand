@@ -11,6 +11,7 @@ import FilterModal from "../FilterModal";
 import TaskEditModal from "../EditModals/TaskEditModal";
 import TaskModal from "../viewModal/taskModal/TaskModal";
 import DeleteModal from "../DeleteModal";
+import CreateTaskModal from "../CreateModals/CreateTaskModal";
 
 function Boards() {
   const [tasks, setTasks] = useState(null);
@@ -155,10 +156,10 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
+              <CreateTaskModal />
             </th>
           </tr>
         </thead>
