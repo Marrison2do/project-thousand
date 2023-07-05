@@ -159,7 +159,7 @@ function Boards() {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
-              <CreateTaskModal />
+              <CreateTaskModal setData={setData} />
             </th>
           </tr>
         </thead>

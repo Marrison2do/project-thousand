@@ -10,6 +10,7 @@ function FilterModal({ value, name, nameState, nameState2 }) {
   const [formValue, setFormValue] = useState("");
   const [formValue2, setFormValue2] = useState("");
   const [operator, setOperator] = useState(">");
+  const [noPriceSwitch, setNoPriceSwitch] = useState(false);
   let isNumber = false;
   const handleClose = () => {
     setShow(false);
@@ -40,14 +41,22 @@ function FilterModal({ value, name, nameState, nameState2 }) {
   };
   const handleShow = () => {
     setShow(true);
+    setOperator(">");
     setFormValue("");
     setFormValue2("");
+    setNoPriceSwitch(false);
   };
 
   if (typeof value === "object") isNumber = true;
 
   const handleNumber = () => {
-    nameState(`&numericFilters=${value.numericFilters}${operator}${formValue}`);
+    if (noPriceSwitch) {
+      nameState("&noPrice=true");
+    } else {
+      nameState(
+        `&numericFilters=${value.numericFilters}${operator}${formValue}`
+      );
+    }
   };
 
   const handleString = () => {
@@ -114,6 +123,12 @@ function FilterModal({ value, name, nameState, nameState2 }) {
                   type="number"
                   autoFocus
                   onChange={(e) => setFormValue(e.target.value)}
+                />
+                <Form.Check
+                  onChange={() => setNoPriceSwitch(!noPriceSwitch)}
+                  type="switch"
+                  id="custom-switch"
+                  label="Sin precio"
                 />
               </Form.Group>
               <Form.Group
