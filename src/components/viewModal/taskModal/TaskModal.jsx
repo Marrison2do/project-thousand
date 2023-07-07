@@ -35,6 +35,24 @@ function EntityModal({ id }) {
   const handleShow = () => {
     setShow(true);
   };
+  const handleHour = (day, month, utcHour) => {
+    const parsedDay = parseInt(day);
+    const parsedMonth = parseInt(month);
+    const parsedUtcHour = parseInt(utcHour);
+    if (parsedMonth < 3 || parsedMonth > 9) return parsedUtcHour - 4;
+    if (parsedMonth == 3 && parsedDay < 10) return parsedUtcHour - 4;
+    return parsedUtcHour - 3;
+  };
+
+  const parsedDate = (date) => {
+    const year = date?.substring(0, 4);
+    const month = date?.substring(5, 7);
+    const day = date?.substring(8, 10);
+    const utcHour = date?.substring(11, 13);
+    const hour = handleHour(day, month, utcHour);
+    const minutes = date?.substring(14, 16);
+    return `${day}/${month}/${year} ${hour}:${minutes}`;
+  };
 
   return (
     <>
@@ -58,13 +76,12 @@ function EntityModal({ id }) {
               <h5>Cliente:</h5>
               <p>{task?.customer?.name}</p>
             </div>
-            <div className="singleData">
-              <h5>Moneda:</h5>
-              <p>{task?.currency}</p>
-            </div>
+
             <div className="singleData">
               <h5>Precio:</h5>
-              <p>{task?.price}</p>
+              <p>
+                {task?.currency} {task?.price}
+              </p>
             </div>
             <div className="singleData">
               <h5>Creado por:</h5>
@@ -72,11 +89,11 @@ function EntityModal({ id }) {
             </div>
             <div className="singleData">
               <h5>Feacha de creacion:</h5>
-              <p>{task?.createdAt}</p>
+              <p>{parsedDate(task?.createdAt)}</p>
             </div>
             <div className="singleData">
               <h5>Fecha de actualizacion:</h5>
-              <p>{task?.updatedAt}</p>
+              <p>{parsedDate(task?.updatedAt)}</p>
             </div>
           </div>
         </Modal.Body>
