@@ -8,27 +8,28 @@ import axios from "axios";
 
 function CreateTaskModal({ setData }) {
   const [show, setShow] = useState(false);
-  const [customers, setCustomers] = useState(null);
-  const [customersName, setCustomersName] = useState("");
-  const [selectedCustomer, setSelectedCustomer] = useState("");
-  const [description, setDescription] = useState("");
+  const [companies, setCompanies] = useState(null);
+  const [companiesName, setCompaniesName] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [serial, setSerial] = useState("");
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("UYU");
-  const [type, setType] = useState("debt");
+  const [invoiceType, setInvoiceType] = useState("e-invoice");
+  const [legalDate, setLegalDate] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
-  async function getCustomers() {
+  async function getCompanies() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers?name=${customersName}`,
+        baseURL: `http://localhost:5000/api/v1/companies?name=${companiesName}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setCustomers(response.data);
+      setCompanies(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -38,16 +39,17 @@ function CreateTaskModal({ setData }) {
       const response = await axios({
         method: "post",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks`,
+        baseURL: `http://localhost:5000/api/v1/invoices`,
         headers: {
           Authorization: "Bearer " + token,
         },
         data: {
-          description: description,
+          serial: serial,
           price: price,
           currency: currency,
-          customer: selectedCustomer,
-          type: type,
+          company: selectedCompany,
+          invoiceType: invoiceType,
+          legalDate: legalDate,
         },
       });
       setData(response);
@@ -56,29 +58,29 @@ function CreateTaskModal({ setData }) {
     }
   }
   useEffect(() => {
-    getCustomers();
-  }, [customersName, customers]);
-
-  const handleClose = () => {
-    setShow(false);
-  };
+    getCompanies();
+  }, [companiesName, companies]);
 
   const handleCreate = () => {
     setShow(false);
-    if (description && selectedCustomer) {
+    if (serial && selectedCompany && price) {
       createTask();
     } else {
       console.log("please fill the required fields");
     }
   };
 
+  const handleClose = () => {
+    setShow(false);
+  };
+
   const cleanForm = () => {
-    setCustomers("");
+    setCompanies("");
     setCurrency("UYU");
     setPrice("");
-    setCustomersName("");
-    setSelectedCustomer("");
-    setDescription("");
+    setCompaniesName("");
+    setSelectedCompany("");
+    setSerial("");
   };
   const handleShow = () => {
     cleanForm();
@@ -96,27 +98,26 @@ function CreateTaskModal({ setData }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Nueva Tarea</Modal.Title>
+          <Modal.Title>Nueva Factura</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Descripción</Form.Label>
+              <Form.Label>Numero de Factura</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={2}
+                type="number"
                 autoFocus
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setSerial(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Select
                 type="select"
-                defaultValue="debt"
-                onChange={(e) => setType(e.target.value)}
+                defaultValue="e-invoice"
+                onChange={(e) => setInvoiceType(e.target.value)}
               >
-                <option value="debt"> Debe </option>
-                <option value="payment">Paga</option>
+                <option value="e-invoice"> E-Factura </option>
+                <option value="creditMemo">Nota de Credito</option>
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
@@ -140,16 +141,16 @@ function CreateTaskModal({ setData }) {
               <Form.Label>Cliente</Form.Label>
               <Form.Control
                 type="text"
-                onChange={(e) => setCustomersName(e.target.value)}
+                onChange={(e) => setCompaniesName(e.target.value)}
               />
               <Form.Select
                 type="select"
-                onChange={(e) => setSelectedCustomer(e.target.value)}
+                onChange={(e) => setSelectedCompany(e.target.value)}
               >
                 <option value=""></option>
-                {customers ? (
+                {companies ? (
                   <>
-                    {customers.list.map((item, index) => {
+                    {companies.list.map((item, index) => {
                       const { name, _id } = item;
                       return (
                         <option key={_id} value={_id}>
@@ -164,6 +165,13 @@ function CreateTaskModal({ setData }) {
                   </>
                 )}
               </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput6">
+              <Form.Label>Fecha de Emision</Form.Label>
+              <Form.Control
+                type="date"
+                onChange={(e) => setLegalDate(e.target.value)}
+              />
             </Form.Group>
           </Form>
         </Modal.Body>

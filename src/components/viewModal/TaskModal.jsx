@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useSelector } from "react-redux";
 import { BsEyeFill } from "react-icons/bs";
-import "./taskModal.css";
+import "./viewSingleModal.css";
 import axios from "axios";
 
 function EntityModal({ id }) {

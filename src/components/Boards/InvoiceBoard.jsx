@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import { BsEyeFill } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
+import InvoiceModal from "../viewModal/InvoiceModal";
+import DeleteModal from "../DeleteModal";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
+import InvoiceEditModal from "../EditModals/InvoiceEditModal";
+import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
 
 function Boards() {
   const [invoices, setInvoices] = useState(null);
@@ -20,6 +22,7 @@ function Boards() {
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
   const [company, setCompany] = useState("");
+  const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -51,7 +54,7 @@ function Boards() {
   useEffect(() => {
     getInvoices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sort]);
+  }, [filters, sort, data]);
 
   function filter(target) {
     target;
@@ -158,6 +161,7 @@ function Boards() {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
+              <CreateInvoiceModal setData={setData} />
             </th>
           </tr>
         </thead>
@@ -172,7 +176,8 @@ function Boards() {
                   company,
                   legalDate,
                   invoiceType,
-                  payed,
+                  createdAt,
+                  _id,
                 } = item;
 
                 const dateResult = dateHandler(legalDate);
@@ -185,9 +190,28 @@ function Boards() {
                     <td className="tdBoard">{invoiceType}</td>
                     <td className="tdBoard">{company?.name}</td>
                     <td className="tdBoard tdacciones">
-                      <BsEyeFill className="actions" />
-                      <AiFillEdit className="actions" />
-                      <MdDeleteForever className="actions" />
+                      <InvoiceModal id={item._id} className="actions" />
+                      <InvoiceEditModal
+                        className="actions"
+                        props={{
+                          serial,
+                          price,
+                          currency,
+                          company,
+                          legalDate,
+                          createdAt,
+                          _id,
+                        }}
+                        setData={setData}
+                      />
+                      <DeleteModal
+                        className="actions"
+                        props={{
+                          collection: "invoices",
+                          _id,
+                        }}
+                        setData={setData}
+                      />
                     </td>
                   </tr>
                 );

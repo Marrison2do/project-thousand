@@ -9,7 +9,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
 import TaskEditModal from "../EditModals/TaskEditModal";
-import TaskModal from "../viewModal/taskModal/TaskModal";
+import TaskModal from "../viewModal/TaskModal";
 import DeleteModal from "../DeleteModal";
 import CreateTaskModal from "../CreateModals/CreateTaskModal";
 

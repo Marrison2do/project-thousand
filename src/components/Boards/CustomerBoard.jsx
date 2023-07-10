@@ -8,7 +8,7 @@ import { BsEyeFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
-import TaskModal from "../viewModal/taskModal/TaskModal.jsx";
+import TaskModal from "../viewModal/TaskModal.jsx";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
