@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import { BsEyeFill } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
-import TaskModal from "../viewModal/TaskModal.jsx";
+import CustomerModal from "../viewModal/CustomerModal";
+import DeleteModal from "../DeleteModal";
+import CustomerEditModal from "../EditModals/CustomerEditModal";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
@@ -20,6 +20,7 @@ function Boards() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [newerUpdateThan, setNewerUpdateThan] = useState("");
   const [olderUpdateThan, setOlderUpdateThan] = useState("");
+  const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -50,7 +51,7 @@ function Boards() {
   useEffect(() => {
     getCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sort]);
+  }, [filters, sort, data]);
 
   function filter(target) {
     target;
@@ -165,6 +166,7 @@ function Boards() {
                   debtUsd,
                   phoneNumber,
                   updatedAt,
+                  _id,
                 } = item;
 
                 const dateResult = dateHandler(updatedAt);
@@ -177,9 +179,32 @@ function Boards() {
                     <td className="tdBoard">{phoneNumber}</td>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard tdacciones">
-                      {/* <TaskModal id={item._id} className="actions" /> */}
-                      <AiFillEdit className="actions" />
-                      <MdDeleteForever className="actions" />
+                      <CustomerModal
+                        props={{ _id, sort, filters, name }}
+                        setData={setData}
+                        className="actions"
+                      />
+                      <CustomerEditModal
+                        className="actions"
+                        props={{
+                          name,
+                          description,
+                          debtUyu,
+                          debtUsd,
+                          phoneNumber,
+                          updatedAt,
+                          _id,
+                        }}
+                        setData={setData}
+                      />
+                      <DeleteModal
+                        className="actions"
+                        props={{
+                          collection: "customers",
+                          _id,
+                        }}
+                        setData={setData}
+                      />
                     </td>
                   </tr>
                 );

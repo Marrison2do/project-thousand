@@ -59,7 +59,7 @@ function CreateTaskModal({ setData }) {
   }
   useEffect(() => {
     getCompanies();
-  }, [companiesName, companies]);
+  }, [companiesName]);
 
   const handleCreate = () => {
     setShow(false);

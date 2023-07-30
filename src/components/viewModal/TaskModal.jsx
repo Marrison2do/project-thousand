@@ -27,12 +27,9 @@ function EntityModal({ id }) {
     }
   }
 
-  useEffect(() => {
-    getTask();
-  }, []);
-
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    getTask();
     setShow(true);
   };
   const handleHour = (day, month, utcHour) => {

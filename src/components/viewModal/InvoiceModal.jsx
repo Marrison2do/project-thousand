@@ -26,12 +26,9 @@ function EntityModal({ id }) {
     }
   }
 
-  useEffect(() => {
-    getInvoice();
-  }, []);
-
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    getInvoice();
     setShow(true);
   };
   const handleHour = (day, month, utcHour) => {

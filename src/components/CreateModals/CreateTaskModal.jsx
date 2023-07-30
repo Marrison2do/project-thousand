@@ -6,10 +6,10 @@ import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CreateTaskModal({ setData }) {
+function CreateTaskModal({ setData, customer }) {
   const [show, setShow] = useState(false);
   const [customers, setCustomers] = useState(null);
-  const [customersName, setCustomersName] = useState("");
+  const [customersName, setCustomersName] = useState(customer || "");
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -57,7 +57,7 @@ function CreateTaskModal({ setData }) {
   }
   useEffect(() => {
     getCustomers();
-  }, [customersName, customers]);
+  }, [customersName]);
 
   const handleClose = () => {
     setShow(false);
@@ -141,6 +141,7 @@ function CreateTaskModal({ setData }) {
               <Form.Control
                 type="text"
                 onChange={(e) => setCustomersName(e.target.value)}
+                defaultValue={customersName}
               />
               <Form.Select
                 type="select"

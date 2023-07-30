@@ -1,74 +1,68 @@
 import React from "react";
-import "./taskBoard.css";
+import "./invoiceBoard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import { BsEyeFill } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
+import InvoiceModal from "../viewModal/InvoiceModal";
+import DeleteModal from "../DeleteModal";
 import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
-import TaskEditModal from "../EditModals/TaskEditModal";
-import TaskModal from "../viewModal/TaskModal";
-import DeleteModal from "../DeleteModal";
-import CreateTaskModal from "../CreateModals/CreateTaskModal";
+import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
+import ReceiptEditModal from "../EditModals/ReceiptEditModal";
 
-function Boards({ props }) {
-  const [tasks, setTasks] = useState(null);
-  const [sort, setSort] = useState("createdAt");
+function Boards() {
+  const [receipts, setReceipts] = useState(null);
+  const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
-  const [description, setDescription] = useState("");
-  const [type, setType] = useState("");
+  const [receiptSet, setReceiptSet] = useState("");
+  const [invoices, setInvoices] = useState("");
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
-  const [customer, setCustomer] = useState(props?.customerName || "");
+  const [company, setCompany] = useState("");
   const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
-  async function getTasks() {
+  async function getReceipts() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/receipts?sort=${sort}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setTasks(response.data);
+      setReceipts(response.data);
     } catch (error) {
       console.log(error);
     }
   }
   const cleanFilters = () => {
-    setCustomer(props?.customerName || "");
+    setCompany("");
     setNumericFilters("");
-    setDescription("");
+    setReceiptSet("");
     setNewerThan("");
     setOlderThan("");
     setCurrency("");
-    setType("");
+    setInvoiceType("");
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      getTasks();
-    }, 50);
-    return () => clearTimeout(timer);
-
+    getReceipts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort, data]);
 
   function filter(target) {
     target;
     setFilters(
-      customer +
+      company +
         numericFilters +
-        description +
-        type +
+        receiptSet +
+        invoices +
         newerThan +
         olderThan +
         currency
@@ -77,10 +71,10 @@ function Boards({ props }) {
   useEffect(() => {
     filter();
   }, [
-    customer,
+    company,
     numericFilters,
-    description,
-    type,
+    invoices,
+    receiptSet,
     newerThan,
     olderThan,
     currency,
@@ -102,28 +96,28 @@ function Boards({ props }) {
         <thead>
           <tr className="trBoard">
             <th className="thBoard">
-              <h5>fecha</h5>
-              <FaArrowUp onClick={() => sorter("-createdAt")} />
-              <FaArrowDown onClick={() => sorter("createdAt")} />
+              <h5>Fecha</h5>
+              <FaArrowUp onClick={() => sorter("-legalDate")} />
+              <FaArrowDown onClick={() => sorter("legalDate")} />
               <FilterModal
-                value="createdAt"
+                value="legalDate"
                 name="Fecha"
                 nameState={setNewerThan}
                 nameState2={setOlderThan}
               />
             </th>
             <th className="thBoard">
-              <h5>Descripcion</h5>
-              <FaArrowUp onClick={() => sorter("-description")} />
-              <FaArrowDown onClick={() => sorter("description")} />
+              <h5>Número</h5>
+              <FaArrowUp onClick={() => sorter("-number")} />
+              <FaArrowDown onClick={() => sorter("number")} />
               <FilterModal
-                nameState={setDescription}
-                value="description"
-                name="Descripción"
+                value={{ numericFilters: "number" }}
+                nameState={setNumericFilters}
+                name="Número"
               />
             </th>
             <th className="thBoard">
-              <h5>Precio</h5>
+              <h5>Monto</h5>
               <FaArrowUp onClick={() => sorter("-price")} />
               <FaArrowDown onClick={() => sorter("price")} />
               <FilterModal
@@ -143,19 +137,23 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard">
-              <h5>tipo</h5>
-              <FaArrowUp onClick={() => sorter("-type")} />
-              <FaArrowDown onClick={() => sorter("type")} />
-              <FilterModal value="type" name="tipo" nameState={setType} />
+              <h5>Facturas</h5>
+              <FaArrowUp onClick={() => sorter("-invoiceType")} />
+              <FaArrowDown onClick={() => sorter("invoiceType")} />
+              <FilterModal
+                value="invoiceType"
+                name="tipo"
+                nameState={setInvoices}
+              />
             </th>
             <th className="thBoard">
-              <h5>Cliente</h5>
-              <FaArrowUp onClick={() => sorter("-customer")} />
-              <FaArrowDown onClick={() => sorter("customer")} />
+              <h5>Empresa</h5>
+              <FaArrowUp onClick={() => sorter("-company")} />
+              <FaArrowDown onClick={() => sorter("company")} />
               <FilterModal
-                nameState={setCustomer}
-                value="customer"
-                name="Cliente"
+                nameState={setCompany}
+                value="company"
+                name="Empresa"
               />
             </th>
             <th className="thBoard thacciones">
@@ -163,56 +161,60 @@ function Boards({ props }) {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
-              <CreateTaskModal
-                setData={setData}
-                customer={props?.customerName || ""}
-              />
+              <CreateInvoiceModal setData={setData} />
             </th>
           </tr>
         </thead>
         <tbody>
-          {tasks ? (
+          {receipts ? (
             <>
-              {tasks.list.map((item, index) => {
+              {receipts.list.map((item, index) => {
                 const {
-                  description,
+                  number,
+                  set,
                   price,
                   currency,
-                  customer,
+                  company,
+                  legalDate,
+                  invoices,
                   createdAt,
-                  type,
                   _id,
                 } = item;
 
-                const dateResult = dateHandler(createdAt);
+                const dateResult = dateHandler(legalDate);
+                var invoiceNumbers = [];
+                invoices?.map((invoice) => {
+                  invoiceNumbers = [...invoiceNumbers, invoice.serial];
+                });
                 return (
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{description}</td>
+                    <td className="tdBoard">{number}</td>
                     <td className="tdBoard">{price}</td>
                     <td className="tdBoard">{currency}</td>
-                    <td className="tdBoard">{type}</td>
-                    <td className="tdBoard">{customer?.name}</td>
+                    <td className="tdBoard">N:{invoiceNumbers.join(", N:")}</td>
+                    <td className="tdBoard">{company?.name}</td>
                     <td className="tdBoard tdacciones">
-                      <TaskModal id={item._id} className="actions" />
-                      <TaskEditModal
+                      <InvoiceModal id={item._id} className="actions" />
+                      <ReceiptEditModal
                         className="actions"
                         props={{
-                          description,
+                          number,
+                          set,
+                          invoices,
                           price,
                           currency,
-                          customer,
+                          company,
+                          legalDate,
                           createdAt,
-                          type,
                           _id,
                         }}
                         setData={setData}
                       />
-                      {/* <AiFillEdit className="actions" /> */}
                       <DeleteModal
                         className="actions"
                         props={{
-                          collection: "tasks",
+                          collection: "receipts",
                           _id,
                         }}
                         setData={setData}
