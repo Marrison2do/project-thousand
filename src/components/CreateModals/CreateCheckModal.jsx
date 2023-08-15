@@ -6,7 +6,7 @@ import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CreateInvoiceModal({ setData, props }) {
+function CreateCheckModal({ setData, props }) {
   const [show, setShow] = useState(false);
   const [companies, setCompanies] = useState(null);
   const [companiesName, setCompaniesName] = useState(props?.name || "");
@@ -190,4 +190,4 @@ function CreateInvoiceModal({ setData, props }) {
   );
 }
 
-export default CreateInvoiceModal;
+export default CreateCheckModal;

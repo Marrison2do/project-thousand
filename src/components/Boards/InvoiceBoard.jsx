@@ -3,15 +3,14 @@ import "./invoiceBoard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import InvoiceModal from "../viewModal/InvoiceModal";
 import DeleteModal from "../DeleteModal";
-import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
 import InvoiceEditModal from "../EditModals/InvoiceEditModal";
 import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
 
-function Boards() {
+function Boards({ props }) {
   const [invoices, setInvoices] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
@@ -21,7 +20,7 @@ function Boards() {
   const [invoiceType, setInvoiceType] = useState("");
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
-  const [company, setCompany] = useState("");
+  const [company, setCompany] = useState(props?.queryName || "");
   const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
@@ -42,7 +41,7 @@ function Boards() {
     }
   }
   const cleanFilters = () => {
-    setCompany("");
+    setCompany(props?.queryName || "");
     setNumericFilters("");
     setPayed("");
     setNewerThan("");
@@ -52,7 +51,11 @@ function Boards() {
   };
 
   useEffect(() => {
-    getInvoices();
+    const timer = setTimeout(() => {
+      getInvoices();
+    }, 50);
+    return () => clearTimeout(timer);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort, data]);
 
@@ -161,7 +164,13 @@ function Boards() {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
-              <CreateInvoiceModal setData={setData} />
+              <CreateInvoiceModal
+                setData={setData}
+                props={{
+                  name: props?.name || "",
+                  _id: props?._id || "",
+                }}
+              />
             </th>
           </tr>
         </thead>

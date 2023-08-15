@@ -70,7 +70,6 @@ function ReceiptEditModal({ props, setData }) {
           Authorization: "Bearer " + token,
         },
         data: {
-          set: receiptSet,
           number: number,
           price: price,
           currency: currency,
@@ -101,14 +100,6 @@ function ReceiptEditModal({ props, setData }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Serie</Form.Label>
-              <Form.Control
-                type="text"
-                onChange={(e) => setReceiptSet(e.target.value)}
-                defaultValue={props.set}
-              />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Numero del recibo</Form.Label>
               <Form.Control

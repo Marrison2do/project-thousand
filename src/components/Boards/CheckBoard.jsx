@@ -10,8 +10,8 @@ import TaskModal from "../viewModal/TaskModal";
 import DeleteModal from "../DeleteModal";
 import CreateTaskModal from "../CreateModals/CreateTaskModal";
 
-function Boards({ props }) {
-  const [tasks, setTasks] = useState(null);
+function Boards() {
+  const [checks, setChecks] = useState(null);
   const [sort, setSort] = useState("createdAt");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
@@ -20,28 +20,30 @@ function Boards({ props }) {
   const [type, setType] = useState("");
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
-  const [customer, setCustomer] = useState(props?.queryName || "");
+  const [payAfter, setPayAfter] = useState("");
+  const [payBefore, setPayBefore] = useState("");
+  const [customer, setCustomer] = useState("");
   const [data, setData] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
-  async function getTasks() {
+  async function getChecks() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/checks?sort=${sort}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setTasks(response.data);
+      setChecks(response.data);
     } catch (error) {
       console.log(error);
     }
   }
   const cleanFilters = () => {
-    setCustomer(props?.queryName || "");
+    setCustomer("");
     setNumericFilters("");
     setDescription("");
     setNewerThan("");
@@ -52,7 +54,7 @@ function Boards({ props }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      getTasks();
+      getChecks();
     }, 50);
     return () => clearTimeout(timer);
 
@@ -99,7 +101,7 @@ function Boards({ props }) {
         <thead>
           <tr className="trBoard">
             <th className="thBoard">
-              <h5>fecha</h5>
+              <h5>Fecha de Ingreso</h5>
               <FaArrowUp onClick={() => sorter("-createdAt")} />
               <FaArrowDown onClick={() => sorter("createdAt")} />
               <FilterModal
@@ -110,7 +112,7 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard">
-              <h5>Descripcion</h5>
+              <h5>Fecha de Cobro</h5>
               <FaArrowUp onClick={() => sorter("-description")} />
               <FaArrowDown onClick={() => sorter("description")} />
               <FilterModal
@@ -118,6 +120,12 @@ function Boards({ props }) {
                 value="description"
                 name="Descripción"
               />
+            </th>
+            <th className="thBoard">
+              <h5>Serie / Numero</h5>
+              <FaArrowUp onClick={() => sorter("-type")} />
+              <FaArrowDown onClick={() => sorter("type")} />
+              <FilterModal value="type" name="tipo" nameState={setType} />
             </th>
             <th className="thBoard">
               <h5>Precio</h5>
@@ -140,12 +148,6 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard">
-              <h5>tipo</h5>
-              <FaArrowUp onClick={() => sorter("-type")} />
-              <FaArrowDown onClick={() => sorter("type")} />
-              <FilterModal value="type" name="tipo" nameState={setType} />
-            </th>
-            <th className="thBoard">
               <h5>Cliente</h5>
               <FaArrowUp onClick={() => sorter("-customer")} />
               <FaArrowDown onClick={() => sorter("customer")} />
@@ -160,38 +162,37 @@ function Boards({ props }) {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
-              <CreateTaskModal
-                setData={setData}
-                props={{
-                  name: props?.name || "",
-                  _id: props?._id || "",
-                }}
-              />
+              <CreateTaskModal setData={setData} />
             </th>
           </tr>
         </thead>
         <tbody>
-          {tasks ? (
+          {checks ? (
             <>
-              {tasks.list.map((item, index) => {
+              {checks.list.map((item, index) => {
+                console.log(item);
                 const {
-                  description,
+                  number,
                   price,
                   currency,
                   customer,
                   createdAt,
-                  type,
+                  paymentDate,
+                  set,
                   _id,
                 } = item;
 
-                const dateResult = dateHandler(createdAt);
+                const checkInDay = dateHandler(createdAt);
+                const paymentDay = dateHandler(paymentDate);
                 return (
                   <tr className="trBoard" key={index}>
-                    <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{description}</td>
+                    <td className="tdBoard">{checkInDay}</td>
+                    <td className="tdBoard">{paymentDay}</td>
+                    <td className="tdBoard">
+                      {set} - {number}
+                    </td>
                     <td className="tdBoard">{price}</td>
                     <td className="tdBoard">{currency}</td>
-                    <td className="tdBoard">{type}</td>
                     <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard tdacciones">
                       <TaskModal id={item._id} className="actions" />
@@ -212,7 +213,7 @@ function Boards({ props }) {
                       <DeleteModal
                         className="actions"
                         props={{
-                          collection: "tasks",
+                          collection: "checks",
                           _id,
                         }}
                         setData={setData}

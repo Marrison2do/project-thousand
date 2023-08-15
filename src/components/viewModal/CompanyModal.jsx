@@ -2,28 +2,28 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import { BsEyeFill } from "react-icons/bs";
 import "./viewSingleModal.css";
-import TaskBoard from "../Boards/TaskBoard";
+import InvoiceBoard from "../Boards/InvoiceBoard";
 
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CustomerModal({ props, setData }) {
+function CompanyModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [customer, setCustomer] = useState(null);
-  const [customerName, setCustomerName] = useState("");
+  const [company, setCompany] = useState(null);
+  const [companyName, setCompanyName] = useState("");
   const token = useSelector((state) => state.token.value);
 
-  async function getCustomer() {
+  async function getCompany() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers/${props._id}`,
+        baseURL: `http://localhost:5000/api/v1/companies/${props._id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setCustomer(response.data);
+      setCompany(response.data);
 
       setData(response);
     } catch (error) {
@@ -32,12 +32,12 @@ function CustomerModal({ props, setData }) {
   }
 
   useEffect(() => {
-    getCustomer();
+    getCompany();
   }, [props.sort, props.filters]);
 
   function handleShow() {
-    getCustomer();
-    setCustomerName(`&customer=${customer?.name}`);
+    getCompany();
+    setCompanyName(`&company=${company?.name}`);
     setShow(true);
     // const timer = setTimeout(() => {
 
@@ -57,12 +57,12 @@ function CustomerModal({ props, setData }) {
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{customer?.name}</Modal.Title>
+          <Modal.Title>{company?.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <TaskBoard
+          <InvoiceBoard
             props={{
-              queryName: `&customer=${props.name}`,
+              queryName: `&company=${props.name}`,
               name: props.name,
               _id: props._id,
             }}
@@ -73,4 +73,4 @@ function CustomerModal({ props, setData }) {
   );
 }
 
-export default CustomerModal;
+export default CompanyModal;

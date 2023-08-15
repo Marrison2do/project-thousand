@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -6,15 +6,13 @@ import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CreateTaskModal({ setData, props }) {
+function createCompanyModal({ setData }) {
   const [show, setShow] = useState(false);
   const [customers, setCustomers] = useState(null);
-  const [customersName, setCustomersName] = useState(props?.name || "");
-  const [selectedCustomer, setSelectedCustomer] = useState(props?._id || "");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [currency, setCurrency] = useState("UYU");
-  const [type, setType] = useState("debt");
+  const [customerName, setCustomerName] = useState("");
+  const [customerId, setCustomerId] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [rut, setRut] = useState("");
 
   const token = useSelector((state) => state.token.value);
 
@@ -23,7 +21,7 @@ function CreateTaskModal({ setData, props }) {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers?name=${customersName}`,
+        baseURL: `http://localhost:5000/api/v1/customers?name=${customerName}`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -33,21 +31,20 @@ function CreateTaskModal({ setData, props }) {
       console.log(error);
     }
   }
-  async function createTask() {
+
+  async function createCompany() {
     try {
       const response = await axios({
         method: "post",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks`,
+        baseURL: `http://localhost:5000/api/v1/companies`,
         headers: {
           Authorization: "Bearer " + token,
         },
         data: {
-          description: description,
-          price: price,
-          currency: currency,
-          customer: selectedCustomer,
-          type: type,
+          name: companyName,
+          customer: customerId,
+          rut: rut,
         },
       });
       setData(response);
@@ -55,9 +52,6 @@ function CreateTaskModal({ setData, props }) {
       console.log(error);
     }
   }
-  useEffect(() => {
-    getCustomers();
-  }, [customersName]);
 
   const handleClose = () => {
     setShow(false);
@@ -65,25 +59,26 @@ function CreateTaskModal({ setData, props }) {
 
   const handleCreate = () => {
     setShow(false);
-    if (description && selectedCustomer) {
-      createTask();
+    if (companyName && customerId && rut) {
+      createCompany();
     } else {
       console.log("please fill the required fields");
     }
   };
 
   const cleanForm = () => {
-    setCustomers("");
-    setCurrency("UYU");
-    setPrice("");
-    setCustomersName(props?.name || "");
-    setSelectedCustomer(props?._id || "");
-    setDescription("");
+    setCompanyName("");
+    setCustomerId("");
+    setCustomerName("");
+    setRut("");
   };
   const handleShow = () => {
     cleanForm();
     setShow(true);
   };
+  useEffect(() => {
+    getCustomers();
+  }, [customerName]);
 
   return (
     <>
@@ -96,59 +91,36 @@ function CreateTaskModal({ setData, props }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Nueva Tarea</Modal.Title>
+          <Modal.Title>Nueva empresa</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Descripción</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={2}
-                autoFocus
-                onChange={(e) => setDescription(e.target.value)}
+                type="text"
+                onChange={(e) => setCompanyName(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Select
-                type="select"
-                defaultValue="debt"
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option value="debt"> Debe </option>
-                <option value="payment">Paga</option>
-              </Form.Select>
-            </Form.Group>
+
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>RUT</Form.Label>
               <Form.Control
                 type="number"
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setRut(e.target.value)}
               />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
-              <Form.Label>Moneda</Form.Label>
-              <Form.Select
-                type="select"
-                onChange={(e) => setCurrency(e.target.value)}
-              >
-                <option value="UYU"> Pesos </option>
-                <option value="USD">Dólares</option>
-              </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
               <Form.Label>Cliente</Form.Label>
               <Form.Control
                 type="text"
-                onChange={(e) => setCustomersName(e.target.value)}
-                defaultValue={props?.name}
+                onChange={(e) => setCustomerName(e.target.value)}
               />
               <Form.Select
                 type="select"
-                defaultValue={props?.name}
-                onChange={(e) => setSelectedCustomer(e.target.value)}
+                onChange={(e) => setCustomerId(e.target.value)}
               >
-                <option value={props?._id || ""}>{props?.name || ""}</option>
+                <option value={""}>{""}</option>
                 {customers ? (
                   <>
                     {customers.list.map((item, index) => {
@@ -182,4 +154,4 @@ function CreateTaskModal({ setData, props }) {
   );
 }
 
-export default CreateTaskModal;
+export default createCompanyModal;

@@ -3,16 +3,15 @@ import "./customerBoard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import { AiFillEdit } from "react-icons/ai";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import FilterModal from "../FilterModal";
-import CustomerModal from "../viewModal/CustomerModal";
+import CompanyModal from "../viewModal/CompanyModal";
 import DeleteModal from "../DeleteModal";
-import CustomerEditModal from "../EditModals/CustomerEditModal";
-import CreateCustomerModal from "../CreateModals/CreateCustomerModal";
+import CompanyEditModal from "../EditModals/CompanyEditModal";
+import CreateCompanyModal from "../CreateModals/CreateCompanyModal";
 
 function Boards() {
-  const [customers, setCustomers] = useState(null);
+  const [companies, setCompanies] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
   const [name, setName] = useState("");
@@ -25,17 +24,17 @@ function Boards() {
 
   const token = useSelector((state) => state.token.value);
 
-  async function getCustomers() {
+  async function getCompanies() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/companies?sort=${sort}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setCustomers(response.data);
+      setCompanies(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +49,7 @@ function Boards() {
   };
 
   useEffect(() => {
-    getCustomers();
+    getCompanies();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort, data]);
 
@@ -118,24 +117,20 @@ function Boards() {
               />
             </th>
             <th className="thBoard">
-              <h5>Descripcion</h5>
-              <FaArrowUp onClick={() => sorter("-description")} />
-              <FaArrowDown onClick={() => sorter("description")} />
+              <h5>Cliente</h5>
+              <FaArrowUp onClick={() => sorter("-customer")} />
+              <FaArrowDown onClick={() => sorter("customer")} />
               <FilterModal
                 nameState={setDescription}
-                value="description"
-                name="Descripción"
+                value="customer"
+                name="Cliente"
               />
             </th>
             <th className="thBoard">
-              <h5>Telefono</h5>
-              <FaArrowUp onClick={() => sorter("-phoneNumber")} />
-              <FaArrowDown onClick={() => sorter("phoneNumber")} />
-              <FilterModal
-                value="phoneNumber"
-                name="Telefono"
-                nameState={setPhoneNumber}
-              />
+              <h5>RUT</h5>
+              <FaArrowUp onClick={() => sorter("-rut")} />
+              <FaArrowDown onClick={() => sorter("rut")} />
+              <FilterModal value="rut" name="Rut" nameState={setPhoneNumber} />
             </th>
             <th className="thBoard">
               <h5>actualizado</h5>
@@ -153,20 +148,20 @@ function Boards() {
               <button className="appButton" onClick={cleanFilters}>
                 limpiar filtros
               </button>
-              <CreateCustomerModal setData={setData} />
+              <CreateCompanyModal setData={setData} />
             </th>
           </tr>
         </thead>
         <tbody>
-          {customers ? (
+          {companies ? (
             <>
-              {customers.list.map((item, index) => {
+              {companies.list.map((item, index) => {
                 const {
                   name,
-                  description,
+                  customer,
                   debtUyu,
                   debtUsd,
-                  phoneNumber,
+                  rut,
                   updatedAt,
                   _id,
                 } = item;
@@ -177,23 +172,23 @@ function Boards() {
                     <td className="tdBoard">{name}</td>
                     <td className="tdBoard">{debtUyu}</td>
                     <td className="tdBoard">{debtUsd}</td>
-                    <td className="tdBoard">{description}</td>
-                    <td className="tdBoard">{phoneNumber}</td>
+                    <td className="tdBoard">{customer?.name}</td>
+                    <td className="tdBoard">{rut}</td>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard tdacciones">
-                      <CustomerModal
+                      <CompanyModal
                         props={{ _id, sort, filters, name }}
                         setData={setData}
                         className="actions"
                       />
-                      <CustomerEditModal
+                      <CompanyEditModal
                         className="actions"
                         props={{
                           name,
-                          description,
+                          customer,
                           debtUyu,
                           debtUsd,
-                          phoneNumber,
+                          rut,
                           updatedAt,
                           _id,
                         }}
@@ -202,7 +197,7 @@ function Boards() {
                       <DeleteModal
                         className="actions"
                         props={{
-                          collection: "customers",
+                          collection: "companies",
                           _id,
                         }}
                         setData={setData}
