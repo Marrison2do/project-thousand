@@ -37,6 +37,12 @@ const Navbar = () => {
         <Link className="link" to="/checks">
           Cheques
         </Link>
+        <Link className="link" to="/hoses">
+          Mangueras
+        </Link>
+        <Link className="link" to="/cylinders">
+          Gatos
+        </Link>
       </div>
       <div className="logout">
         <p>

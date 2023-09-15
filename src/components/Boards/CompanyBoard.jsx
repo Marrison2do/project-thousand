@@ -9,6 +9,7 @@ import CompanyModal from "../viewModal/CompanyModal";
 import DeleteModal from "../DeleteModal";
 import CompanyEditModal from "../EditModals/CompanyEditModal";
 import CreateCompanyModal from "../CreateModals/CreateCompanyModal";
+import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards() {
   const [companies, setCompanies] = useState(null);
@@ -47,6 +48,12 @@ function Boards() {
     setNewerUpdateThan("");
     setOlderUpdateThan("");
   };
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
 
   useEffect(() => {
     getCompanies();
@@ -145,9 +152,7 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
+              <RiFilterOffFill onClick={cleanFilters} />
               <CreateCompanyModal setData={setData} />
             </th>
           </tr>
@@ -170,8 +175,8 @@ function Boards() {
                 return (
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{name}</td>
-                    <td className="tdBoard">{debtUyu}</td>
-                    <td className="tdBoard">{debtUsd}</td>
+                    <td className="tdBoard">{UYUFormat(debtUyu)}</td>
+                    <td className="tdBoard">{USDFormat(debtUsd)}</td>
                     <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard">{rut}</td>
                     <td className="tdBoard">{dateResult}</td>

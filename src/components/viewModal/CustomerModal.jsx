@@ -65,6 +65,7 @@ function CustomerModal({ props, setData }) {
               queryName: `&customer=${props.name}`,
               name: props.name,
               _id: props._id,
+              modal: props.modal,
             }}
           />
         </Modal.Body>

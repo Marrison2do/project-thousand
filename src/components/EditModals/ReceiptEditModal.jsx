@@ -9,7 +9,6 @@ import axios from "axios";
 function ReceiptEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
   const [invoices, setInvoices] = useState(invoiceText);
-  const [receiptSet, setReceiptSet] = useState(props.set);
   const [number, setNumber] = useState(props.number);
   const [price, setPrice] = useState(props.price);
   const [currency, setCurrency] = useState(props.currency);

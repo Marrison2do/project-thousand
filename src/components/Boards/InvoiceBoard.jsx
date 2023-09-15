@@ -9,6 +9,7 @@ import DeleteModal from "../DeleteModal";
 import FilterModal from "../FilterModal";
 import InvoiceEditModal from "../EditModals/InvoiceEditModal";
 import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
+import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards({ props }) {
   const [invoices, setInvoices] = useState(null);
@@ -49,6 +50,22 @@ function Boards({ props }) {
     setCurrency("");
     setInvoiceType("");
   };
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  function CurrencyHandler(item) {
+    if (item.currency === "UYU") {
+      return UYUFormat(item.price);
+    }
+    if (item.currency == "USD") {
+      return USDFormat(item.price);
+    }
+    return;
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -161,9 +178,7 @@ function Boards({ props }) {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
+              <RiFilterOffFill onClick={cleanFilters} />
               <CreateInvoiceModal
                 setData={setData}
                 props={{
@@ -194,7 +209,9 @@ function Boards({ props }) {
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard">{serial}</td>
-                    <td className="tdBoard">{price}</td>
+                    <td className="tdBoard">
+                      {price ? CurrencyHandler(item) : ""}
+                    </td>
                     <td className="tdBoard">{currency}</td>
                     <td className="tdBoard">{invoiceType}</td>
                     <td className="tdBoard">{company?.name}</td>

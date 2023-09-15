@@ -78,6 +78,10 @@ function EntityModal({ id }) {
               <p>{invoice?.createdBy.name}</p>
             </div>
             <div className="singleData">
+              <h5>Actualizado por:</h5>
+              <p>{invoice?.updatedBy?.name}</p>
+            </div>
+            <div className="singleData">
               <h5>Feacha de emisión:</h5>
               <p>{parsedDate(invoice?.legalDate)}</p>
             </div>

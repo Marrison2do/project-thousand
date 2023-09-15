@@ -8,9 +8,9 @@ import axios from "axios";
 
 function CustomerEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [description, setDescription] = useState(props.description);
-  const [name, setName] = useState(props.name);
-  const [phoneNumber, setPhoneNumber] = useState(props.currency);
+  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -26,6 +26,11 @@ function CustomerEditModal({ props, setData }) {
   const token = useSelector((state) => state.token.value);
 
   async function updateCustomers() {
+    const formBody = {};
+    if (description) formBody.description = description;
+    if (name) formBody.name = name;
+    if (phoneNumber) formBody.phoneNumber = phoneNumber;
+
     try {
       const response = await axios({
         method: "patch",
@@ -34,11 +39,7 @@ function CustomerEditModal({ props, setData }) {
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          name: name,
-          description: description,
-          phoneNumber: phoneNumber,
-        },
+        data: formBody,
       });
       setData(response);
     } catch (error) {

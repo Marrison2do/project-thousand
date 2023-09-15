@@ -1,52 +1,43 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { ImPlus } from "react-icons/im";
+import { AiFillEdit } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CreateCheckModal({ setData }) {
+function TaskEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [customers, setCustomers] = useState(null);
-  const [customersName, setCustomersName] = useState("");
-  const [selectedCustomer, setSelectedCustomer] = useState("");
-  const [bank, setBank] = useState("");
-  const [checkSet, setCheckSet] = useState("");
-  const [checkNumber, setCheckNumber] = useState("");
-  const [price, setPrice] = useState("");
-  const [currency, setCurrency] = useState("UYU");
-  const [paymentDate, setPaymentDate] = useState("");
+  const [bank, setBank] = useState(props.bank);
+  const [checkSet, setCheckSet] = useState(props.set);
+  const [checkNumber, setCheckNumber] = useState(props.number);
+  const [price, setPrice] = useState(props.price);
+  const [currency, setCurrency] = useState(props.currency);
+  const [paymentDate, setPaymentDate] = useState(props.paymentDate);
+  const handleClose = () => {
+    setShow(false);
+  };
+  const update = () => {
+    updateTasks();
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
 
   const token = useSelector((state) => state.token.value);
 
-  async function getCustomers() {
+  async function updateTasks() {
     try {
       const response = await axios({
-        method: "get",
+        method: "patch",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/customers?name=${customersName}`,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      setCustomers(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function createCheck() {
-    try {
-      const response = await axios({
-        method: "post",
-        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/checks`,
+        baseURL: `http://localhost:5000/api/v1/checks/${props._id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
         data: {
           check: {
-            customer: selectedCustomer,
             currency: currency,
             bank: bank,
             set: checkSet,
@@ -55,8 +46,8 @@ function CreateCheckModal({ setData }) {
             price: price,
           },
           task: {
+            _id: props.task,
             description: `Entrega Cheque ${bank} ${checkSet} - ${checkNumber}`,
-            customer: selectedCustomer,
             currency: currency,
             type: "payment",
             price: price,
@@ -68,49 +59,10 @@ function CreateCheckModal({ setData }) {
       console.log(error);
     }
   }
-  useEffect(() => {
-    getCustomers();
-  }, [customersName]);
-
-  const handleClose = () => {
-    setShow(false);
-  };
-
-  const handleCreate = () => {
-    setShow(false);
-    if (
-      bank &&
-      selectedCustomer &&
-      checkSet &&
-      checkNumber &&
-      price &&
-      paymentDate
-    ) {
-      createCheck();
-    } else {
-      console.log("please fill the required fields");
-    }
-  };
-
-  const cleanForm = () => {
-    setCustomers("");
-    setCurrency("UYU");
-    setPrice("");
-    setCustomersName("");
-    setSelectedCustomer("");
-    setBank("");
-    setCheckNumber("");
-    setCheckSet("");
-    setPaymentDate("");
-  };
-  const handleShow = () => {
-    cleanForm();
-    setShow(true);
-  };
 
   return (
     <>
-      <ImPlus onClick={handleShow} />
+      <AiFillEdit className="actions" onClick={handleShow} />
 
       <Modal
         show={show}
@@ -119,7 +71,7 @@ function CreateCheckModal({ setData }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Nuevo Cheque</Modal.Title>
+          <Modal.Title>Editar Cheque</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -129,6 +81,7 @@ function CreateCheckModal({ setData }) {
                 type="text"
                 autoFocus
                 onChange={(e) => setBank(e.target.value)}
+                defaultValue={props.bank}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -136,11 +89,13 @@ function CreateCheckModal({ setData }) {
               <Form.Control
                 type="text"
                 onChange={(e) => setCheckSet(e.target.value)}
+                defaultValue={props.set}
               />
               <Form.Label>numero</Form.Label>
               <Form.Control
                 type="text"
                 onChange={(e) => setCheckNumber(e.target.value)}
+                defaultValue={props.number}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
@@ -148,6 +103,7 @@ function CreateCheckModal({ setData }) {
               <Form.Control
                 type="number"
                 onChange={(e) => setPrice(e.target.value)}
+                defaultValue={props.price}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput6">
@@ -155,6 +111,7 @@ function CreateCheckModal({ setData }) {
               <Form.Control
                 type="date"
                 onChange={(e) => setPaymentDate(e.target.value)}
+                defaultValue={props.paymentDate}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
@@ -162,48 +119,20 @@ function CreateCheckModal({ setData }) {
               <Form.Select
                 type="select"
                 onChange={(e) => setCurrency(e.target.value)}
+                defaultValue={props.currency}
               >
                 <option value="UYU"> Pesos </option>
                 <option value="USD">Dólares</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
-              <Form.Label>Cliente</Form.Label>
-              <Form.Control
-                type="text"
-                onChange={(e) => setCustomersName(e.target.value)}
-              />
-              <Form.Select
-                type="select"
-                onChange={(e) => setSelectedCustomer(e.target.value)}
-              >
-                <option value=""></option>
-                {customers ? (
-                  <>
-                    {customers.list.map((item, index) => {
-                      const { name, _id } = item;
-                      return (
-                        <option key={_id} value={_id}>
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <>
-                    <option value="">cargando</option>
-                  </>
-                )}
               </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Cancelar
+            Descartar Cambios
           </Button>
-          <Button variant="primary" onClick={handleCreate}>
-            Crear
+          <Button variant="primary" onClick={update}>
+            Guardar Cambios
           </Button>
         </Modal.Footer>
       </Modal>
@@ -211,4 +140,4 @@ function CreateCheckModal({ setData }) {
   );
 }
 
-export default CreateCheckModal;
+export default TaskEditModal;

@@ -10,6 +10,7 @@ import CustomerModal from "../viewModal/CustomerModal";
 import DeleteModal from "../DeleteModal";
 import CustomerEditModal from "../EditModals/CustomerEditModal";
 import CreateCustomerModal from "../CreateModals/CreateCustomerModal";
+import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards() {
   const [customers, setCustomers] = useState(null);
@@ -39,6 +40,12 @@ function Boards() {
     } catch (error) {
       console.log(error);
     }
+  }
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   const cleanFilters = () => {
     setName("");
@@ -150,9 +157,7 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
+              <RiFilterOffFill onClick={cleanFilters} />
               <CreateCustomerModal setData={setData} />
             </th>
           </tr>
@@ -175,14 +180,14 @@ function Boards() {
                 return (
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{name}</td>
-                    <td className="tdBoard">{debtUyu}</td>
-                    <td className="tdBoard">{debtUsd}</td>
+                    <td className="tdBoard">{UYUFormat(debtUyu)}</td>
+                    <td className="tdBoard">{USDFormat(debtUsd)}</td>
                     <td className="tdBoard">{description}</td>
                     <td className="tdBoard">{phoneNumber}</td>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard tdacciones">
                       <CustomerModal
-                        props={{ _id, sort, filters, name }}
+                        props={{ _id, sort, filters, modal: true, name }}
                         setData={setData}
                         className="actions"
                       />

@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import InvoiceModal from "../viewModal/InvoiceModal";
+import ReceiptModal from "../viewModal/ReceiptModal";
 import DeleteModal from "../DeleteModal";
-import { AiFillEdit } from "react-icons/ai";
 import FilterModal from "../FilterModal";
-import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
+import CreateReceiptModal from "../CreateModals/CreateReceiptModal";
 import ReceiptEditModal from "../EditModals/ReceiptEditModal";
+import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards() {
   const [receipts, setReceipts] = useState(null);
@@ -67,6 +67,22 @@ function Boards() {
         olderThan +
         currency
     );
+  }
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  function CurrencyHandler(item) {
+    if (item.currency === "UYU") {
+      return UYUFormat(item.price);
+    }
+    if (item.currency == "USD") {
+      return USDFormat(item.price);
+    }
+    return;
   }
   useEffect(() => {
     filter();
@@ -158,10 +174,8 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
-              <CreateInvoiceModal setData={setData} />
+              <RiFilterOffFill onClick={cleanFilters} />
+              <CreateReceiptModal setData={setData} />
             </th>
           </tr>
         </thead>
@@ -190,12 +204,14 @@ function Boards() {
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard">{number}</td>
-                    <td className="tdBoard">{price}</td>
+                    <td className="tdBoard">
+                      {price ? CurrencyHandler(item) : ""}
+                    </td>
                     <td className="tdBoard">{currency}</td>
                     <td className="tdBoard">N:{invoiceNumbers.join(", N:")}</td>
                     <td className="tdBoard">{company?.name}</td>
                     <td className="tdBoard tdacciones">
-                      <InvoiceModal id={item._id} className="actions" />
+                      <ReceiptModal id={item._id} className="actions" />
                       <ReceiptEditModal
                         className="actions"
                         props={{

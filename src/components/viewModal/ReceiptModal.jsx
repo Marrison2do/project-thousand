@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useSelector } from "react-redux";
 import { BsEyeFill } from "react-icons/bs";
@@ -8,20 +7,20 @@ import axios from "axios";
 
 function EntityModal({ id }) {
   const [show, setShow] = useState(false);
-  const [task, setTask] = useState(null);
+  const [receipt, setReceipt] = useState(null);
   const token = useSelector((state) => state.token.value);
 
-  async function getTask() {
+  async function getReceipt() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks/${id}`,
+        baseURL: `http://localhost:5000/api/v1/receipts/${id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setTask(response.data);
+      setReceipt(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -29,7 +28,7 @@ function EntityModal({ id }) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    getTask();
+    getReceipt();
     setShow(true);
   };
   const handleHour = (day, month, utcHour) => {
@@ -48,6 +47,8 @@ function EntityModal({ id }) {
     const utcHour = date?.substring(11, 13);
     const hour = handleHour(day, month, utcHour);
     const minutes = date?.substring(14, 16);
+
+    if (date == receipt?.legalDate) return `${day}/${month}/${year}`;
     return `${day}/${month}/${year} ${hour}:${minutes}`;
   };
 
@@ -57,44 +58,40 @@ function EntityModal({ id }) {
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Descripcion de la tarea</Modal.Title>
+          <Modal.Title>Recibo Numero: {receipt?.number}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="dataContainer">
             <div className="singleData">
-              <h5>Tipo:</h5>
-              <p>{task?.type}</p>
-            </div>
-            <div className="singleData">
-              <h5>Descripcion:</h5>
-              <p>{task?.description}</p>
-            </div>
-            <div className="singleData">
-              <h5>Cliente:</h5>
-              <p>{task?.customer?.name}</p>
+              <h5>Empresa:</h5>
+              <p>{receipt?.company?.name}</p>
             </div>
 
             <div className="singleData">
-              <h5>Precio:</h5>
+              <h5>Monto:</h5>
               <p>
-                {task?.currency} {task?.price}
+                {receipt?.currency} {receipt?.price}
               </p>
             </div>
             <div className="singleData">
               <h5>Creado por:</h5>
-              <p>{task?.createdBy.name}</p>
+              <p>{receipt?.createdBy.name}</p>
             </div>
             <div className="singleData">
               <h5>Actualizado por:</h5>
-              <p>{task?.updatedBy?.name}</p>
+              <p>{receipt?.updatedBy?.name}</p>
             </div>
             <div className="singleData">
-              <h5>Feacha de creacion:</h5>
-              <p>{parsedDate(task?.createdAt)}</p>
+              <h5>Fecha de emisión:</h5>
+              <p>{parsedDate(receipt?.legalDate)}</p>
             </div>
             <div className="singleData">
-              <h5>Fecha de actualizacion:</h5>
-              <p>{parsedDate(task?.updatedAt)}</p>
+              <h5>Fecha de creación:</h5>
+              <p>{parsedDate(receipt?.createdAt)}</p>
+            </div>
+            <div className="singleData">
+              <h5>Fecha de actualización:</h5>
+              <p>{parsedDate(receipt?.updatedAt)}</p>
             </div>
           </div>
         </Modal.Body>

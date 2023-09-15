@@ -9,6 +9,9 @@ import TaskEditModal from "../EditModals/TaskEditModal";
 import TaskModal from "../viewModal/TaskModal";
 import DeleteModal from "../DeleteModal";
 import CreateTaskModal from "../CreateModals/CreateTaskModal";
+import CustomerModal from "../viewModal/CustomerModal";
+import { RiFilterOffFill } from "react-icons/ri";
+import PrintCustomerModal from "../PrintModals/PrintCustomerModal";
 
 function Boards({ props }) {
   const [tasks, setTasks] = useState(null);
@@ -22,6 +25,7 @@ function Boards({ props }) {
   const [olderThan, setOlderThan] = useState("");
   const [customer, setCustomer] = useState(props?.queryName || "");
   const [data, setData] = useState("");
+  const [modal, setModal] = useState(props?.modal || false);
 
   const token = useSelector((state) => state.token.value);
 
@@ -49,6 +53,22 @@ function Boards({ props }) {
     setCurrency("");
     setType("");
   };
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  function CurrencyHandler(item) {
+    if (item.currency === "UYU") {
+      return UYUFormat(item.price);
+    }
+    if (item.currency == "USD") {
+      return USDFormat(item.price);
+    }
+    return;
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -157,10 +177,15 @@ function Boards({ props }) {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
+              {tasks && modal && (
+                <PrintCustomerModal
+                  props={{ tasks: tasks, customerId: props._id }}
+                />
+              )}
+
+              <RiFilterOffFill onClick={cleanFilters} />
               <CreateTaskModal
+                className="h-actions"
                 setData={setData}
                 props={{
                   name: props?.name || "",
@@ -189,10 +214,27 @@ function Boards({ props }) {
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard">{description}</td>
-                    <td className="tdBoard">{price}</td>
+                    <td className="tdBoard">
+                      {price ? CurrencyHandler(item) : ""}
+                    </td>
                     <td className="tdBoard">{currency}</td>
                     <td className="tdBoard">{type}</td>
-                    <td className="tdBoard">{customer?.name}</td>
+                    <td className="tdBoard">
+                      {customer?.name}
+                      {!modal && (
+                        <CustomerModal
+                          props={{
+                            _id: customer?._id,
+                            sort,
+                            filters,
+                            modal: true,
+                            name: customer?.name,
+                          }}
+                          setData={setData}
+                          className="actions"
+                        />
+                      )}
+                    </td>
                     <td className="tdBoard tdacciones">
                       <TaskModal id={item._id} className="actions" />
                       <TaskEditModal

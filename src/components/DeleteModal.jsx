@@ -18,11 +18,17 @@ function DeleteModal({ props, setData }) {
   const token = useSelector((state) => state.token.value);
 
   async function deleteTask() {
+    var data = "";
+    if (props.collection == "checks") {
+      data = { taskId: { id: props.task } };
+    }
+
     try {
       const response = await axios({
         method: "delete",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
         baseURL: `http://localhost:5000/api/v1/${props.collection}/${props._id}`,
+        data: data,
         headers: {
           Authorization: "Bearer " + token,
         },

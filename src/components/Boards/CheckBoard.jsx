@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import FilterModal from "../FilterModal";
-import TaskEditModal from "../EditModals/TaskEditModal";
-import TaskModal from "../viewModal/TaskModal";
+import CheckEditModal from "../EditModals/CheckEditModal";
+import CheckModal from "../viewModal/CheckModal";
 import DeleteModal from "../DeleteModal";
-import CreateTaskModal from "../CreateModals/CreateTaskModal";
+import CreateCheckModal from "../CreateModals/CreateCheckModal";
+import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards() {
   const [checks, setChecks] = useState(null);
@@ -73,6 +74,22 @@ function Boards() {
         currency
     );
   }
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  function CurrencyHandler(item) {
+    if (item.currency === "UYU") {
+      return UYUFormat(item.price);
+    }
+    if (item.currency == "USD") {
+      return USDFormat(item.price);
+    }
+    return;
+  }
   useEffect(() => {
     filter();
   }, [
@@ -122,6 +139,16 @@ function Boards() {
               />
             </th>
             <th className="thBoard">
+              <h5>Banco</h5>
+              <FaArrowUp onClick={() => sorter("-description")} />
+              <FaArrowDown onClick={() => sorter("description")} />
+              <FilterModal
+                nameState={setDescription}
+                value="description"
+                name="Descripción"
+              />
+            </th>
+            <th className="thBoard">
               <h5>Serie / Numero</h5>
               <FaArrowUp onClick={() => sorter("-type")} />
               <FaArrowDown onClick={() => sorter("type")} />
@@ -159,10 +186,8 @@ function Boards() {
             </th>
             <th className="thBoard thacciones">
               <h5>Acciones</h5>
-              <button className="appButton" onClick={cleanFilters}>
-                limpiar filtros
-              </button>
-              <CreateTaskModal setData={setData} />
+              <RiFilterOffFill onClick={cleanFilters} />
+              <CreateCheckModal setData={setData} />
             </th>
           </tr>
         </thead>
@@ -170,7 +195,6 @@ function Boards() {
           {checks ? (
             <>
               {checks.list.map((item, index) => {
-                console.log(item);
                 const {
                   number,
                   price,
@@ -178,8 +202,10 @@ function Boards() {
                   customer,
                   createdAt,
                   paymentDate,
+                  bank,
                   set,
                   _id,
+                  task,
                 } = item;
 
                 const checkInDay = dateHandler(createdAt);
@@ -188,23 +214,29 @@ function Boards() {
                   <tr className="trBoard" key={index}>
                     <td className="tdBoard">{checkInDay}</td>
                     <td className="tdBoard">{paymentDay}</td>
+                    <td className="tdBoard">{bank}</td>
                     <td className="tdBoard">
                       {set} - {number}
                     </td>
-                    <td className="tdBoard">{price}</td>
+                    <td className="tdBoard">
+                      {price ? CurrencyHandler(item) : ""}
+                    </td>
                     <td className="tdBoard">{currency}</td>
                     <td className="tdBoard">{customer?.name}</td>
                     <td className="tdBoard tdacciones">
-                      <TaskModal id={item._id} className="actions" />
-                      <TaskEditModal
+                      <CheckModal id={item._id} className="actions" />
+                      <CheckEditModal
                         className="actions"
                         props={{
-                          description,
+                          bank,
+                          set,
+                          number,
                           price,
                           currency,
                           customer,
                           createdAt,
-                          type,
+                          paymentDate,
+                          task,
                           _id,
                         }}
                         setData={setData}
@@ -214,6 +246,7 @@ function Boards() {
                         className="actions"
                         props={{
                           collection: "checks",
+                          task,
                           _id,
                         }}
                         setData={setData}

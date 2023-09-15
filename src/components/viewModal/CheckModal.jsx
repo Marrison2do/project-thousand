@@ -8,7 +8,7 @@ import axios from "axios";
 
 function EntityModal({ id }) {
   const [show, setShow] = useState(false);
-  const [task, setTask] = useState(null);
+  const [check, setCheck] = useState(null);
   const token = useSelector((state) => state.token.value);
 
   async function getTask() {
@@ -16,12 +16,12 @@ function EntityModal({ id }) {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks/${id}`,
+        baseURL: `http://localhost:5000/api/v1/checks/${id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setTask(response.data);
+      setCheck(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -57,44 +57,46 @@ function EntityModal({ id }) {
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Descripcion de la tarea</Modal.Title>
+          <Modal.Title>Descripcion del Cheque</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="dataContainer">
             <div className="singleData">
-              <h5>Tipo:</h5>
-              <p>{task?.type}</p>
+              <h5>banco:</h5>
+              <p>{check?.bank}</p>
             </div>
             <div className="singleData">
-              <h5>Descripcion:</h5>
-              <p>{task?.description}</p>
+              <h5>Serie - Numero:</h5>
+              <p>
+                {check?.set} - {check?.number}
+              </p>
             </div>
             <div className="singleData">
               <h5>Cliente:</h5>
-              <p>{task?.customer?.name}</p>
+              <p>{check?.customer?.name}</p>
             </div>
 
             <div className="singleData">
-              <h5>Precio:</h5>
+              <h5>Monto:</h5>
               <p>
-                {task?.currency} {task?.price}
+                {check?.currency} {check?.price}
               </p>
             </div>
             <div className="singleData">
               <h5>Creado por:</h5>
-              <p>{task?.createdBy.name}</p>
+              <p>{check?.createdBy.name}</p>
             </div>
             <div className="singleData">
               <h5>Actualizado por:</h5>
-              <p>{task?.updatedBy?.name}</p>
+              <p>{check?.updatedBy?.name}</p>
             </div>
             <div className="singleData">
               <h5>Feacha de creacion:</h5>
-              <p>{parsedDate(task?.createdAt)}</p>
+              <p>{parsedDate(check?.createdAt)}</p>
             </div>
             <div className="singleData">
               <h5>Fecha de actualizacion:</h5>
-              <p>{parsedDate(task?.updatedAt)}</p>
+              <p>{parsedDate(check?.updatedAt)}</p>
             </div>
           </div>
         </Modal.Body>

@@ -1,7 +1,6 @@
 .customerBoard {
   background-color: rgb(255, 255, 255);
   width: 100%;
-  /* border: 2px solid rgb(220, 220, 220); */
   table-layout: fixed;
   box-shadow: 10px 10px;
   border-radius: 5px;
@@ -59,6 +58,10 @@
 .thBoard svg {
   margin-right: 4px;
   font-size: 18px;
+}
+.thacciones svg {
+  margin-right: 10px;
+  font-size: 22px;
 }
 .thBoard svg:hover {
   color: rgb(39, 171, 138);
