@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { AiFillEdit } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function TaskEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
@@ -40,11 +42,13 @@ function TaskEditModal({ props, setData }) {
           currency: currency,
           customer: props.customer._id,
           type: props.type,
+          updatedAt: Date.now,
         },
       });
       setData(response);
+      toast.success("Cambios Guardados");
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
 

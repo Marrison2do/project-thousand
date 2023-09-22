@@ -2,9 +2,9 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";
-import CylindersBoard from "../components/Boards/CylindersBoard";
+import CartBoard from "../components/Boards/CartBoard";
 
-function Hoses() {
+function cart() {
   const isLogged = useSelector((state) => state.token.value) !== "";
 
   return (
@@ -14,11 +14,11 @@ function Hoses() {
       ) : (
         <div>
           <Navbar></Navbar>
-          <CylindersBoard />
+          <CartBoard />
         </div>
       )}
     </>
   );
 }
 
-export default Hoses;
+export default cart;

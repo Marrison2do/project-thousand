@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { AiFillEdit } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CompanyEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
@@ -71,8 +73,9 @@ function CompanyEditModal({ props, setData }) {
         },
       });
       setData(response);
+      toast.success("Cambios Guardados");
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
   useEffect(() => {

@@ -4,8 +4,10 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import priceList from "../../assets/hosePrices";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function CreateHoseModal({ hoses, setHoses }) {
+function CreateItemModal({ cart, setCart, parentSetShow }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -20,11 +22,15 @@ function CreateHoseModal({ hoses, setHoses }) {
   const createHose = () => {
     const { PM, PH, PHC, OJO } = hoseSize;
 
+    let check = true;
     const fittingsArray = fittings.toUpperCase().split("\n");
     const fittingsPrices = fittingsArray.map((item) => {
       const singleItem = item.split(" ");
 
-      if (singleItem.length > 2) return undefined;
+      if (singleItem.length > 2) {
+        check = false;
+        return undefined;
+      }
       if (singleItem[0] === "") return 0;
       if (singleItem[1] === "PM" && !isNaN(singleItem[0]))
         return PM * singleItem[0];
@@ -38,52 +44,60 @@ function CreateHoseModal({ hoses, setHoses }) {
       if (singleItem[0] === "PH" && singleItem.length == 1) return PH;
       if (singleItem[0] === "PHC" && singleItem.length == 1) return PHC;
       if (singleItem[0] === "OJO" && singleItem.length == 1) return OJO;
+      check = false;
       return undefined;
     });
-    let fittingSum = 0;
-    fittingsPrices.map((item) => {
-      fittingSum = fittingSum + item;
-    });
-    const singlePrice =
-      fittingSum +
-      hoseLength * hoseSize.Hose +
-      ferrule * hoseSize.ferrule +
-      recover * hoseSize.rec;
+    if (!check) {
+      toast.error("Punteros Incorrectos");
+    }
 
-    const descriptionHandler = () => {
-      const fittingString = fittingsArray.join(" ");
-      let singleHose = "";
-      let multiHose = "";
-      singleHose = `${hoseSize.name} ${fittingString}`;
-      if (ferrule == 1) {
-        singleHose = singleHose + ` 1 Camisa`;
-      }
-      if ((ferrule > 1 && !hoseLength) || ferrule > 2) {
-        singleHose = singleHose + ` ${ferrule} Camisas`;
-      }
-      if (quantity !== 1 && hoseLength) {
-        multiHose = `${quantity} Mangueras ${hoseLength}m ` + singleHose;
-        singleHose = `Manguera ${hoseLength}m ` + singleHose;
-      }
-      if (quantity == 1 && hoseLength) {
-        singleHose = `Manguera ${hoseLength}m ` + singleHose;
-        multiHose = singleHose;
-      }
-      return { singleHose, multiHose };
-    };
-    setHoses([
-      ...hoses,
-      {
-        description: descriptionHandler().singleHose,
-        saveDescription: descriptionHandler().multiHose,
-        singlePrice: parseFloat(singlePrice * exchange).toFixed(2),
-        quantity: quantity,
-        iva: true,
-        dollar: false,
-        saved: false,
-      },
-    ]);
-    setShow(false);
+    if (check) {
+      let fittingSum = 0;
+      fittingsPrices.map((item) => {
+        fittingSum = fittingSum + item;
+      });
+      const singlePrice =
+        fittingSum +
+        hoseLength * hoseSize.Hose +
+        ferrule * hoseSize.ferrule +
+        recover * hoseSize.rec;
+
+      const descriptionHandler = () => {
+        const fittingString = fittingsArray.join(" ");
+        let singleHose = "";
+        let multiHose = "";
+        singleHose = `${hoseSize.name} ${fittingString}`;
+        if (ferrule == 1) {
+          singleHose = singleHose + ` 1 Camisa`;
+        }
+        if ((ferrule > 1 && !hoseLength) || ferrule > 2) {
+          singleHose = singleHose + ` ${ferrule} Camisas`;
+        }
+        if (quantity !== 1 && hoseLength) {
+          multiHose = `${quantity} Mangueras ${hoseLength}m ` + singleHose;
+          singleHose = `Manguera ${hoseLength}m ` + singleHose;
+        }
+        if (quantity == 1 && hoseLength) {
+          singleHose = `Manguera ${hoseLength}m ` + singleHose;
+          multiHose = singleHose;
+        }
+        return { singleHose, multiHose };
+      };
+      setCart([
+        ...cart,
+        {
+          description: descriptionHandler().singleHose,
+          saveDescription: descriptionHandler().multiHose,
+          singlePrice: parseFloat(singlePrice * exchange).toFixed(2),
+          quantity: quantity,
+          iva: true,
+          dollar: false,
+          saved: false,
+        },
+      ]);
+      setShow(false);
+      parentSetShow(false);
+    }
   };
   const clearState = () => {
     setPrice("");
@@ -102,6 +116,7 @@ function CreateHoseModal({ hoses, setHoses }) {
   };
   const handleClose = () => {
     setShow(false);
+    parentSetShow(false);
   };
 
   const hosesValues = [
@@ -121,7 +136,9 @@ function CreateHoseModal({ hoses, setHoses }) {
 
   return (
     <>
-      <ImPlus onClick={handleShow} />
+      <button className="appButton" onClick={handleShow}>
+        Manguera
+      </button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -213,4 +230,4 @@ function CreateHoseModal({ hoses, setHoses }) {
   );
 }
 
-export default CreateHoseModal;
+export default CreateItemModal;

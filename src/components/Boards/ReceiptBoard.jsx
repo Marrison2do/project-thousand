@@ -150,6 +150,7 @@ function Boards() {
                 value="currency"
                 nameState={setCurrency}
                 name="moneda"
+                defaultValue="UYU"
               />
             </th>
             <th className="thBoard">

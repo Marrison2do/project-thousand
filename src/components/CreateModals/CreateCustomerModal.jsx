@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function createCustomerModal({ setData }) {
   const [show, setShow] = useState(false);
@@ -30,8 +32,9 @@ function createCustomerModal({ setData }) {
         },
       });
       setData(response);
+      toast.success("Cliente creado Correctamente");
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
 
@@ -40,11 +43,11 @@ function createCustomerModal({ setData }) {
   };
 
   const handleCreate = () => {
-    setShow(false);
     if (name) {
       createCustomer();
+      setShow(false);
     } else {
-      console.log("please fill the required fields");
+      toast.error("Requiere Nombre");
     }
   };
 

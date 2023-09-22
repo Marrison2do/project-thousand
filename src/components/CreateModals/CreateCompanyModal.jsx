@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function createCompanyModal({ setData }) {
   const [show, setShow] = useState(false);
@@ -48,6 +50,7 @@ function createCompanyModal({ setData }) {
         },
       });
       setData(response);
+      toast.success("Empresa creada correctamente");
     } catch (error) {
       console.log(error);
     }
@@ -58,12 +61,37 @@ function createCompanyModal({ setData }) {
   };
 
   const handleCreate = () => {
-    setShow(false);
-    if (companyName && customerId && rut) {
-      createCompany();
-    } else {
-      console.log("please fill the required fields");
+    if (!companyName && !customerId && !rut) {
+      toast.error("Requiere: Nombre, Cliente, RUT");
+      return;
     }
+    if (!companyName && !customerId) {
+      toast.error("Requiere: Nombre, Cliente");
+      return;
+    }
+    if (!companyName && !rut) {
+      toast.error("Requiere: Nombre, RUT");
+      return;
+    }
+    if (!customerId && !rut) {
+      toast.error("Requiere: Cliente, RUT");
+      return;
+    }
+    if (!companyName) {
+      toast.error("Requiere: Nombre");
+      return;
+    }
+    if (!customerId) {
+      toast.error("Requiere: Cliente");
+      return;
+    }
+    if (!rut) {
+      toast.error("Requiere: RUT");
+      return;
+    }
+
+    setShow(false);
+    createCompany();
   };
 
   const cleanForm = () => {

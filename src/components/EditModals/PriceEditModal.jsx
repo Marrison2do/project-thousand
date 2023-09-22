@@ -8,18 +8,20 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function InvoiceEditModal({ props, setData }) {
+function PriceEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [serial, setSerial] = useState(props.serial);
-  const [price, setPrice] = useState(props.price);
-  const [currency, setCurrency] = useState(props.currency);
-  const [legalDate, setLegalDate] = useState(props.legalDate);
+  const [price, setPrice] = useState("");
+  const [name, setName] = useState("");
+  const [unit, setUnit] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [pack, setPack] = useState("");
+  const [supplier, setSupplier] = useState("");
 
   const handleClose = () => {
     setShow(false);
   };
   const update = () => {
-    updateInvoices();
+    updatePrice();
     setShow(false);
   };
   const handleShow = () => {
@@ -28,23 +30,24 @@ function InvoiceEditModal({ props, setData }) {
 
   const token = useSelector((state) => state.token.value);
 
-  async function updateInvoices() {
+  async function updatePrice() {
+    const formBody = {};
+    if (name) formBody.name = name;
+    if (price) formBody.price = price;
+    if (unit) formBody.unit = unit;
+    if (currency) formBody.currency = currency;
+    if (pack) formBody.pack = pack;
+    if (supplier) formBody.supplier = supplier;
+
     try {
       const response = await axios({
         method: "patch",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/invoices/${props._id}`,
+        baseURL: `http://localhost:5000/api/v1/prices/${props._id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          serial: serial,
-          price: price,
-          currency: currency,
-          company: props.company._id,
-          type: props.type,
-          legalDate: legalDate,
-        },
+        data: formBody,
       });
       setData(response);
       toast.success("Cambios Guardados");
@@ -64,54 +67,76 @@ function InvoiceEditModal({ props, setData }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Editar Factura</Modal.Title>
+          <Modal.Title>Editar Articulo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Numero de Factura</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 autoFocus
-                onChange={(e) => setSerial(e.target.value)}
-                defaultValue={props.serial}
+                defaultValue={props.name}
+                onChange={(e) => setName(e.target.value)}
               />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput6">
+              <Form.Label>Unidad</Form.Label>
+              <Form.Select
+                type="select"
+                defaultValue={props.unit}
+                onChange={(e) => setUnit(e.target.value)}
+              >
+                <option value="Unidad"> Unidad </option>
+                <option value="Metro">Metro</option>
+                <option value="Metro cuadrado">Metro Cuadrado</option>
+                <option value="Litro">Litro</option>
+              </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Precio</Form.Label>
               <Form.Control
                 type="number"
-                onChange={(e) => setPrice(e.target.value)}
                 defaultValue={props.price}
+                onChange={(e) => setPrice(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
               <Form.Label>Moneda</Form.Label>
               <Form.Select
                 type="select"
-                onChange={(e) => setCurrency(e.target.value)}
                 defaultValue={props.currency}
+                onChange={(e) => setCurrency(e.target.value)}
               >
                 <option value="UYU"> Pesos </option>
                 <option value="USD">Dólares</option>
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
-              <Form.Label>Fecha de Emision</Form.Label>
+              <Form.Label>Grupo</Form.Label>
               <Form.Control
-                type="date"
-                onChange={(e) => setLegalDate(e.target.value)}
-                defaultValue={props.legalDate}
+                type="text"
+                defaultValue={props.pack}
+                onChange={(e) => setPack(e.target.value)}
+                placeholder="General"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
+              <Form.Label>Proveedor</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue={props.supplier}
+                onChange={(e) => setSupplier(e.target.value)}
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Descartar Cambios
+            Cancelar
           </Button>
           <Button variant="primary" onClick={update}>
-            Guardar Cambios
+            Crear
           </Button>
         </Modal.Footer>
       </Modal>
@@ -119,4 +144,4 @@ function InvoiceEditModal({ props, setData }) {
   );
 }
 
-export default InvoiceEditModal;
+export default PriceEditModal;

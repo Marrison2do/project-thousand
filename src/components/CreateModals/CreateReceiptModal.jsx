@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateReceiptModal({ setData }) {
   const [show, setShow] = useState(false);
@@ -78,6 +80,7 @@ function CreateReceiptModal({ setData }) {
         },
       });
       setData(response);
+      toast.success("Recibo creado correctamente");
     } catch (error) {
       console.log(error);
     }
@@ -87,12 +90,12 @@ function CreateReceiptModal({ setData }) {
   }, [companiesName]);
 
   const handleCreate = async () => {
-    setShow(false);
     if (number && selectedCompany && price && legalDate) {
       const invoiceArray = await handleInvoice();
       createReceipt(invoiceArray);
+      setShow(false);
     } else {
-      console.log("please fill the required fields");
+      toast.error("Requiere: Numero, Empresa, Precio, Fecha");
     }
   };
 

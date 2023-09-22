@@ -6,6 +6,9 @@ import { AiFillEdit } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function TaskEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
   const [bank, setBank] = useState(props.bank);
@@ -55,8 +58,9 @@ function TaskEditModal({ props, setData }) {
         },
       });
       setData(response);
+      toast.success("Cambios Guardados");
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
 

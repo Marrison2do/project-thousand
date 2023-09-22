@@ -5,6 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateCheckModal({ setData }) {
   const [show, setShow] = useState(false);
@@ -64,8 +66,9 @@ function CreateCheckModal({ setData }) {
         },
       });
       setData(response);
+      toast.success("Cheque Creado Correctamente");
     } catch (error) {
-      console.log(error);
+      toast.error("Error interno");
     }
   }
   useEffect(() => {
@@ -77,7 +80,6 @@ function CreateCheckModal({ setData }) {
   };
 
   const handleCreate = () => {
-    setShow(false);
     if (
       bank &&
       selectedCustomer &&
@@ -86,9 +88,10 @@ function CreateCheckModal({ setData }) {
       price &&
       paymentDate
     ) {
+      setShow(false);
       createCheck();
     } else {
-      console.log("please fill the required fields");
+      toast.error("Campos Incompletos");
     }
   };
 

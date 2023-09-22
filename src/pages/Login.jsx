@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { storeToken, deleteToken } from "../redux/tokenActions";
 import { storeUser, deleteUser } from "../redux/userActions";
 import "./login.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -36,8 +38,7 @@ function Login() {
       dispatch(storeUser(result.data.user));
       navigate("/");
     } catch (error) {
-      console.log(error);
-      setLoginMessage(error);
+      toast.error("Usuario o Contraseña incorrectos");
     }
   }
 
@@ -51,7 +52,7 @@ function Login() {
     >
       <div id="formContent">
         <div className="loginTitle m-3">
-          <h3>Login</h3>
+          <h3>Iniciar Sesión</h3>
         </div>
         <input
           type="text"
@@ -59,7 +60,7 @@ function Login() {
           name="username"
           onChange={(e) => setLoginUsername(e.target.value)}
           className="fadeIn second"
-          placeholder="Username"
+          placeholder="Usuario"
         />
         <input
           type="password"
@@ -67,16 +68,12 @@ function Login() {
           name="password"
           onChange={(e) => setLoginPassword(e.target.value)}
           className="fadeIn third"
-          placeholder="password"
+          placeholder="Contraseña"
         />
-        <button className="login-button fadeIn fourth">Login</button>
+        <button className="login-button fadeIn fourth">Iniciar Sesión</button>
         {/* <input type="submit" className="fadeIn fourth" value="Log In" /> */}
 
-        <div id="formFooter">
-          <a className="underlineHover" href="#">
-            Forgot Password?
-          </a>
-        </div>
+        <div id="formFooter"></div>
       </div>
     </form>
   );

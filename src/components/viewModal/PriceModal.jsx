@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useSelector } from "react-redux";
 import { BsEyeFill } from "react-icons/bs";
@@ -7,20 +8,20 @@ import axios from "axios";
 
 function EntityModal({ id }) {
   const [show, setShow] = useState(false);
-  const [invoice, setInvoice] = useState(null);
+  const [price, setPrice] = useState(null);
   const token = useSelector((state) => state.token.value);
 
-  async function getInvoice() {
+  async function getTask() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/invoices/${id}`,
+        baseURL: `http://localhost:5000/api/v1/prices/${id}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      setInvoice(response.data);
+      setPrice(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -28,7 +29,7 @@ function EntityModal({ id }) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    getInvoice();
+    getTask();
     setShow(true);
   };
   const handleHour = (day, month, utcHour) => {
@@ -47,13 +48,7 @@ function EntityModal({ id }) {
     const utcHour = date?.substring(11, 13);
     const hour = handleHour(day, month, utcHour);
     const minutes = date?.substring(14, 16);
-
-    if (date == invoice?.legalDate) return `${day}/${month}/${year}`;
     return `${day}/${month}/${year} ${hour}:${minutes}`;
-  };
-  const payed = (param) => {
-    if (param) return "Pago";
-    if (!param) return "Pendiente";
   };
 
   return (
@@ -62,44 +57,48 @@ function EntityModal({ id }) {
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Factura Numero: {invoice?.serial}</Modal.Title>
+          <Modal.Title>Descripcion del Articulo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="dataContainer">
             <div className="singleData">
-              <h5>Empresa:</h5>
-              <p>{invoice?.company?.name}</p>
+              <h5>Nombre:</h5>
+              <p>{price?.name}</p>
+            </div>
+            <div className="singleData">
+              <h5>Unidad:</h5>
+              <p>{price?.unit}</p>
             </div>
 
             <div className="singleData">
               <h5>Precio:</h5>
               <p>
-                {invoice?.currency} {invoice?.price}
+                {price?.currency} {price?.price}
               </p>
             </div>
             <div className="singleData">
+              <h5>Grupo:</h5>
+              <p>{price?.pack}</p>
+            </div>
+            <div className="singleData">
+              <h5>Proveedor:</h5>
+              <p>{price?.supplier}</p>
+            </div>
+            <div className="singleData">
               <h5>Creado por:</h5>
-              <p>{invoice?.createdBy.name}</p>
+              <p>{price?.createdBy.name}</p>
             </div>
             <div className="singleData">
               <h5>Actualizado por:</h5>
-              <p>{invoice?.updatedBy?.name}</p>
+              <p>{price?.updatedBy?.name}</p>
             </div>
             <div className="singleData">
-              <h5>Feacha de emisión:</h5>
-              <p>{parsedDate(invoice?.legalDate)}</p>
+              <h5>Feacha de creacion:</h5>
+              <p>{parsedDate(price?.createdAt)}</p>
             </div>
             <div className="singleData">
-              <h5>Feacha de creación:</h5>
-              <p>{parsedDate(invoice?.createdAt)}</p>
-            </div>
-            <div className="singleData">
-              <h5>Estado de Cobro:</h5>
-              <p>{payed(invoice?.payed)}</p>
-            </div>
-            <div className="singleData">
-              <h5>Fecha de actualización:</h5>
-              <p>{parsedDate(invoice?.updatedAt)}</p>
+              <h5>Fecha de actualizacion:</h5>
+              <p>{parsedDate(price?.updatedAt)}</p>
             </div>
           </div>
         </Modal.Body>

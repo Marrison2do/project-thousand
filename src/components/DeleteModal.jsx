@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import { MdDeleteForever } from "react-icons/md";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DeleteModal({ props, setData }) {
   const [show, setShow] = useState(false);
@@ -34,7 +36,9 @@ function DeleteModal({ props, setData }) {
         },
       });
       setData(response);
+      toast.success("Elemento Eliminado Correctamente");
     } catch (error) {
+      toast.error("Error interno");
       console.log(error);
     }
   }

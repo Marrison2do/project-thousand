@@ -21,14 +21,22 @@
   padding: 10px;
   border: 1px solid rgb(164, 164, 164);
 }
+.payment {
+  color: red;
+  font-weight: bolder;
+  font-style: italic;
+  padding: 10px;
+  border: 1px solid rgb(164, 164, 164);
+}
+
 .thBoard h5 {
   display: inline;
-  padding-right: 20px;
+  padding-right: 10px;
 }
 
 .tdacciones,
 .thacciones {
-  width: 250px;
+  width: 220px;
 }
 .thacciones {
   padding-left: 20px;
@@ -40,7 +48,11 @@
 }
 
 .actions {
-  font-size: 48px;
+  font-size: 36px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .actions:hover {
   color: white;
@@ -71,4 +83,21 @@
 
 .thBoard h5 {
   font-size: 16px;
+}
+
+.date,
+.type {
+  width: 140px;
+}
+
+.currency,
+.price {
+  width: 158px;
+}
+.customer {
+  width: 250px;
+}
+
+.tdboard p {
+  display: inline;
 }

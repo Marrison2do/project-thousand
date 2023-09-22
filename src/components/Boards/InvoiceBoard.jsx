@@ -13,7 +13,7 @@ import { RiFilterOffFill } from "react-icons/ri";
 
 function Boards({ props }) {
   const [invoices, setInvoices] = useState(null);
-  const [sort, setSort] = useState("updatedAt");
+  const [sort, setSort] = useState("number");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
@@ -154,6 +154,7 @@ function Boards({ props }) {
                 value="currency"
                 nameState={setCurrency}
                 name="moneda"
+                defaultValue="UYU"
               />
             </th>
             <th className="thBoard">
@@ -164,6 +165,7 @@ function Boards({ props }) {
                 value="invoiceType"
                 name="tipo"
                 nameState={setInvoiceType}
+                defaultValue="e-invoice"
               />
             </th>
             <th className="thBoard">

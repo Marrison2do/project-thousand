@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { MdLocalPrintshop } from "react-icons/md";
+import Image from "react-bootstrap/Image";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import logo from "../../assets/logo-mini.png";
 
 function Example({ props }) {
   const [show, setShow] = useState(false);
+  const [interStage, setInterStage] = useState(false);
   const [customer, setCustomer] = useState(null);
+  const [formValue, setFormValue] = useState("selected");
+  const [selected, setSelected] = useState(false);
+  const [total, setTotal] = useState(false);
+  const [prev, setPrev] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -30,7 +38,39 @@ function Example({ props }) {
     getCustomer();
   }, []);
 
+  const handleInterStage = () => {
+    setFormValue("selected");
+    setInterStage(true);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setInterStage(false);
+    setFormValue("selected");
+    setSelected(false);
+    setTotal(false);
+    setPrev(null);
+  };
+
+  const closeInterStage = () => {
+    setInterStage(false);
+  };
+
   function handleShow() {
+    if (formValue == "selected") {
+      setSelected(true);
+    }
+    if (formValue == "total") {
+      setTotal(true);
+    }
+    if (deverced[0] !== props.tasks.list[0]?.price && formValue == "total") {
+      console.log(deverced[0] - props.tasks.list[0]?.price);
+      setPrev({
+        price: deverced[0] - props.tasks.list[0]?.price,
+        currency: props.tasks.list[0]?.currency,
+      });
+    }
+    setInterStage(false);
     setShow(true);
     const timer = setTimeout(() => {
       print();
@@ -60,10 +100,20 @@ function Example({ props }) {
     }
     return;
   }
+  let sum = 0;
+  const balanceSum = props.tasks.list.map((item, index) => {
+    if (item.type == "debt") {
+      sum = sum + item.price;
+      return sum;
+    }
+    if (item.type == "payment") {
+      sum = sum - item.price;
+      return sum;
+    }
+  });
   let subst = 0;
   const copyArray = [...props.tasks.list];
   const reversed = copyArray.reverse();
-  console.log(reversed);
 
   const balance = reversed.map((item, index) => {
     if (index == 0) {
@@ -90,12 +140,47 @@ function Example({ props }) {
   const deverced = balance.reverse();
   return (
     <>
-      <MdLocalPrintshop onClick={() => handleShow()}></MdLocalPrintshop>
-      <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
+      <MdLocalPrintshop onClick={() => handleInterStage()}></MdLocalPrintshop>
+      <Modal show={interStage} onHide={closeInterStage}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal</Modal.Title>
+          <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Seleccion de Saldo</Form.Label>
+
+              <Form.Select
+                type="select"
+                autoFocus
+                defaultValue="UYU"
+                onChange={(e) => setFormValue(e.target.value)}
+              >
+                <option value="selected">Solo Seleccionado</option>
+                <option value="total">Total con Saldo anterior</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            ></Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeInterStage}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleShow}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={show} fullscreen={true} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Image src={logo} fluid />
+        </Modal.Header>
+        <Modal.Body>
+          <h3>{props.tasks.list[0]?.customer.name}</h3>
           <div className="tablecontainer">
             <table className="customerBoard">
               <thead>
@@ -118,8 +203,22 @@ function Example({ props }) {
                 </tr>
               </thead>
               <tbody>
-                {props.tasks ? (
+                {show ? (
                   <>
+                    {prev ? (
+                      <>
+                        <tr className="trBoard">
+                          <td className="tdBoard"></td>
+                          <td className="tdBoard">Saldo Anterior</td>
+                          <td className="tdBoard">{CurrencyHandler(prev)}</td>
+                          <td className="tdBoard"></td>
+
+                          <td className="tdBoard">{CurrencyHandler(prev)}</td>
+                        </tr>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     {props.tasks.list.map((item, index) => {
                       const { description, price, type, createdAt, _id } = item;
 
@@ -135,13 +234,22 @@ function Example({ props }) {
                           <td className="tdBoard">
                             {type == "payment" && CurrencyHandler(item)}
                           </td>
-                          {show ? (
-                            <td className="tdBoard">
-                              {parseFloat(deverced[index]).toFixed(2)}
-                            </td>
-                          ) : (
-                            <td className="tdBoard">2</td>
-                          )}
+
+                          <td className="tdBoard">
+                            {total ? (
+                              CurrencyHandler({
+                                price: deverced[index],
+                                currency: props.tasks.list[0].currency,
+                              })
+                            ) : selected ? (
+                              CurrencyHandler({
+                                price: balanceSum[index],
+                                currency: props.tasks.list[0].currency,
+                              })
+                            ) : (
+                              <>bug</>
+                            )}
+                          </td>
                         </tr>
                       );
                     })}

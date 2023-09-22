@@ -6,6 +6,9 @@ import { BsFileEarmarkTextFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function SaveHoseModal({ props }) {
   const [show, setShow] = useState(false);
   const [customers, setCustomers] = useState(null);
@@ -26,14 +29,14 @@ function SaveHoseModal({ props }) {
       });
       setCustomers(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
   let currency = "";
-  if (props.hoses[props.index].dollar) {
+  if (props.cart[props.index].dollar) {
     currency = "USD";
   }
-  if (!props.hoses[props.index].dollar) {
+  if (!props.cart[props.index].dollar) {
     currency = "UYU";
   }
   async function createTask() {
@@ -46,20 +49,20 @@ function SaveHoseModal({ props }) {
           Authorization: "Bearer " + token,
         },
         data: {
-          description: props.hoses[props.index].saveDescription,
+          description: props.cart[props.index].saveDescription,
           price:
-            props.hoses[props.index].singlePrice *
-            props.hoses[props.index].quantity,
+            props.cart[props.index].singlePrice *
+            props.cart[props.index].quantity,
           currency: currency,
           customer: selectedCustomer,
           type: "debt",
         },
       });
-      props.hoses[props.index].saved = true;
-      props.setHoses([...props.hoses]);
-      console.log(props.hoses[props.index]);
+      props.cart[props.index].saved = true;
+      props.setCart([...props.cart]);
+      toast.success("Guardado Correctamente");
     } catch (error) {
-      console.log(error);
+      toast.error("Error al guardar");
     }
   }
   useEffect(() => {
@@ -68,11 +71,11 @@ function SaveHoseModal({ props }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleCreate = () => {
-    setShow(false);
     if (selectedCustomer) {
       createTask();
+      setShow(false);
     } else {
-      console.log("please fill the required fields");
+      toast.error("Seleccione Cliente");
     }
   };
 
@@ -82,7 +85,7 @@ function SaveHoseModal({ props }) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Nueva Manguera</Modal.Title>
+          <Modal.Title>Nuevo Artículo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>

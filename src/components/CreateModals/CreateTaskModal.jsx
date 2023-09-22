@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateTaskModal({ setData, props }) {
   const [show, setShow] = useState(false);
@@ -51,7 +53,9 @@ function CreateTaskModal({ setData, props }) {
         },
       });
       setData(response);
+      toast.success("Tarea Creada Correctamente");
     } catch (error) {
+      toast.error("Error Interno");
       console.log(error);
     }
   }
@@ -64,12 +68,16 @@ function CreateTaskModal({ setData, props }) {
   };
 
   const handleCreate = () => {
-    setShow(false);
-    if (description && selectedCustomer) {
-      createTask();
-    } else {
-      console.log("please fill the required fields");
+    if (!description && !selectedCustomer) {
+      toast.error("Requiere Cliente y Descripcion");
+      return;
     }
+    if (!selectedCustomer) {
+      toast.error("Requiere Cliente");
+      return;
+    }
+    createTask();
+    setShow(false);
   };
 
   const cleanForm = () => {
@@ -84,11 +92,26 @@ function CreateTaskModal({ setData, props }) {
     cleanForm();
     setShow(true);
   };
+  const handleKeyPress = useCallback((event) => {
+    console.log(event.key);
+    if (event.key == "ArrowRight") {
+      handleShow();
+    }
+  }, []);
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", handleKeyPress);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   return (
     <>
       <ImPlus onClick={handleShow} />
-
       <Modal
         show={show}
         onHide={handleClose}

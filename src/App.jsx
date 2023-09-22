@@ -7,13 +7,21 @@ import Invoices from "./pages/Invoices";
 import Login from "./pages/Login";
 import Receipts from "./pages/Receipts";
 import Tasks from "./pages/Tasks";
-import Hoses from "./pages/Hoses";
-import Cylinders from "./pages/Cylinders";
+import Prices from "./pages/Prices";
+import Cart from "./pages/Cart";
 import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const showToastMessage = () => {
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
   return (
     <div className="app">
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Customers />} />
         <Route path="/login" element={<Login />} />
@@ -22,8 +30,8 @@ function App() {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/receipts" element={<Receipts />} />
         <Route path="/tasks" element={<Tasks />} />
-        <Route path="/hoses" element={<Hoses />} />
-        <Route path="/cylinders" element={<Cylinders />} />
+        <Route path="/prices" element={<Prices />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </div>
   );

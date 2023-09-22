@@ -6,6 +6,9 @@ import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function CreateInvoiceModal({ setData, props }) {
   const [show, setShow] = useState(false);
   const [companies, setCompanies] = useState(null);
@@ -31,10 +34,10 @@ function CreateInvoiceModal({ setData, props }) {
       });
       setCompanies(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error interno");
     }
   }
-  async function createTask() {
+  async function createInvoice() {
     try {
       const response = await axios({
         method: "post",
@@ -53,8 +56,9 @@ function CreateInvoiceModal({ setData, props }) {
         },
       });
       setData(response);
+      toast.success("Factura creada correctamente");
     } catch (error) {
-      console.log(error);
+      toast.error("Error interno");
     }
   }
   useEffect(() => {
@@ -62,12 +66,13 @@ function CreateInvoiceModal({ setData, props }) {
   }, [companiesName]);
 
   const handleCreate = () => {
-    setShow(false);
-    if (serial && selectedCompany && price) {
-      createTask();
-    } else {
-      console.log("please fill the required fields");
+    if (!serial || !selectedCompany || !price || !legalDate) {
+      toast.error("Requiere: Numero, Empresa, Precio, Fecha");
+      return;
     }
+
+    setShow(false);
+    createInvoice();
   };
 
   const handleClose = () => {

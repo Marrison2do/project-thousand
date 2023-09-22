@@ -5,13 +5,17 @@ import Modal from "react-bootstrap/Modal";
 import { ImCheckmark } from "react-icons/im";
 import { FaFilter } from "react-icons/fa";
 
-function FilterModal({ value, name, nameState, nameState2 }) {
+function FilterModal({ value, name, nameState, defaultValue, nameState2 }) {
   const [show, setShow] = useState(false);
-  const [formValue, setFormValue] = useState("");
+  const [formValue, setFormValue] = useState(defaultValue || "");
   const [formValue2, setFormValue2] = useState("");
   const [operator, setOperator] = useState(">");
   const [noPriceSwitch, setNoPriceSwitch] = useState(false);
   let isNumber = false;
+  let isCurrency = false;
+  let isType = false;
+  let isInvoiceType = false;
+
   const handleClose = () => {
     setShow(false);
     if (value == "updatedAt" || value == "createdAt" || value == "legalDate") {
@@ -32,7 +36,15 @@ function FilterModal({ value, name, nameState, nameState2 }) {
       nameState2(`&newerThan=${formValue2}`);
     }
   };
-
+  if (value == "invoiceType") {
+    isInvoiceType = true;
+  }
+  if (value == "type") {
+    isType = true;
+  }
+  if (value == "currency") {
+    isCurrency = true;
+  }
   const cleanQuery = () => {
     if (nameState2) nameState2("");
     nameState("");
@@ -42,7 +54,7 @@ function FilterModal({ value, name, nameState, nameState2 }) {
   const handleShow = () => {
     setShow(true);
     setOperator(">");
-    setFormValue("");
+    setFormValue(defaultValue || "");
     setFormValue2("");
     setNoPriceSwitch(false);
   };
@@ -130,6 +142,90 @@ function FilterModal({ value, name, nameState, nameState2 }) {
                   id="custom-switch"
                   label="Sin precio"
                 />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          ) : isCurrency ? (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
+            >
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>{name}</Form.Label>
+
+                <Form.Select
+                  type="select"
+                  autoFocus
+                  defaultValue="UYU"
+                  onChange={(e) => setFormValue(e.target.value)}
+                >
+                  <option value="UYU"> Pesos </option>
+                  <option value="USD">Dólares</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          ) : isType ? (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
+            >
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>{name}</Form.Label>
+
+                <Form.Select
+                  type="select"
+                  autoFocus
+                  defaultValue="debt"
+                  onChange={(e) => setFormValue(e.target.value)}
+                >
+                  <option value="debt"> Debe </option>
+                  <option value="payment">Paga</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              ></Form.Group>
+            </Form>
+          ) : isInvoiceType ? (
+            <Form
+              onSubmit={() => {
+                event.preventDefault();
+                handleClose();
+              }}
+            >
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>{name}</Form.Label>
+
+                <Form.Select
+                  type="select"
+                  autoFocus
+                  defaultValue="e-invoice"
+                  onChange={(e) => setFormValue(e.target.value)}
+                >
+                  <option value="e-invoice"> E-Factura </option>
+                  <option value="creditMemo">Nota de credito</option>
+                </Form.Select>
               </Form.Group>
               <Form.Group
                 className="mb-3"

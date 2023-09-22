@@ -37,17 +37,15 @@ const Navbar = () => {
         <Link className="link" to="/checks">
           Cheques
         </Link>
-        <Link className="link" to="/hoses">
-          Mangueras
+        <Link className="link" to="/prices">
+          Lista de Precios
         </Link>
-        <Link className="link" to="/cylinders">
-          Gatos
+        <Link className="link" to="/cart">
+          Carrito
         </Link>
       </div>
       <div className="logout">
-        <p>
-          <span>Logueado como:</span> {user.name}
-        </p>
+        <p>{user.name}</p>
         <button className="appButton" onClick={() => logout()}>
           Cerrar sesion
         </button>

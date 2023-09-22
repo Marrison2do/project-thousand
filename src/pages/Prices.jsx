@@ -2,9 +2,9 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";
-import HosesBoard from "../components/Boards/HosesBoard";
+import PriceListBoard from "../components/Boards/PriceListBoard";
 
-function Hoses() {
+function Prices() {
   const isLogged = useSelector((state) => state.token.value) !== "";
 
   return (
@@ -14,11 +14,11 @@ function Hoses() {
       ) : (
         <div>
           <Navbar></Navbar>
-          <HosesBoard />
+          <PriceListBoard />
         </div>
       )}
     </>
   );
 }
 
-export default Hoses;
+export default Prices;

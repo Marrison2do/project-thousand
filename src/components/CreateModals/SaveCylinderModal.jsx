@@ -6,6 +6,9 @@ import { BsFileEarmarkTextFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function SaveCylinderModal({ props }) {
   const [show, setShow] = useState(false);
   const [customers, setCustomers] = useState(null);
@@ -26,7 +29,7 @@ function SaveCylinderModal({ props }) {
       });
       setCustomers(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error Interno");
     }
   }
   let currency = "";
@@ -56,9 +59,9 @@ function SaveCylinderModal({ props }) {
       });
       props.cylinders[props.index].saved = true;
       props.setCylinders([...props.cylinders]);
-      console.log(props.cylinders[props.index]);
+      toast.success("Guardado correctamente");
     } catch (error) {
-      console.log(error);
+      toast.error("Error al guardar");
     }
   }
   useEffect(() => {
@@ -67,11 +70,11 @@ function SaveCylinderModal({ props }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleCreate = () => {
-    setShow(false);
     if (selectedCustomer) {
       createTask();
+      setShow(false);
     } else {
-      console.log("please fill the required fields");
+      toast.error("Seleccionar Cliente");
     }
   };
 
