@@ -10,6 +10,9 @@ import { RiFilterOffFill } from "react-icons/ri";
 import CreatePriceModal from "../CreateModals/CreatePriceModal";
 import PriceEditModal from "../EditModals/PriceEditModal";
 import PriceModal from "../viewModal/PriceModal";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Boards({ props }) {
   const [prices, setPrices] = useState(null);
@@ -24,6 +27,7 @@ function Boards({ props }) {
   const [newerThan, setNewerThan] = useState("");
   const [olderThan, setOlderThan] = useState("");
   const [data, setData] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -42,6 +46,39 @@ function Boards({ props }) {
       console.log(error);
     }
   }
+  async function update(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/prices/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintItem = (id) => {
+    if (selectedColor) update(id);
+  };
+
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
+  }
   const cleanFilters = () => {
     setName("");
     setUnit("");
@@ -58,12 +95,22 @@ function Boards({ props }) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
 
-  function CurrencyHandler(item) {
+  function priceHandler(item) {
     if (item.currency === "UYU") {
       return UYUFormat(item.price);
     }
     if (item.currency == "USD") {
       return USDFormat(item.price);
+    }
+    return;
+  }
+
+  function costHandler(item) {
+    if (item.currency === "UYU") {
+      return UYUFormat(item.cost);
+    }
+    if (item.currency == "USD") {
+      return USDFormat(item.cost);
     }
     return;
   }
@@ -168,6 +215,16 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard">
+              <h5>Costo</h5>
+              <FaArrowUp onClick={() => sorter("-cost")} />
+              <FaArrowDown onClick={() => sorter("cost")} />
+              <FilterModal
+                value={{ numericFilters: "cost" }}
+                nameState={setNumericFilters}
+                name="precio"
+              />
+            </th>
+            <th className="thBoard">
               <h5>grupo</h5>
               <FaArrowUp onClick={() => sorter("-pack")} />
               <FaArrowDown onClick={() => sorter("pack")} />
@@ -189,9 +246,12 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
               <RiFilterOffFill onClick={cleanFilters} />
               <CreatePriceModal setData={setData} />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
             </th>
           </tr>
         </thead>
@@ -201,25 +261,36 @@ function Boards({ props }) {
               {prices.list.map((item, index) => {
                 const {
                   name,
+                  description,
                   price,
+                  cost,
                   unit,
                   supplier,
                   pack,
                   currency,
                   createdAt,
+                  color,
                   _id,
                 } = item;
-
+                let rowClass = colorClassHandler(index, color);
                 const dateResult = dateHandler(createdAt);
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintItem(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{name}</td>
+                    <td className="tdBoard">
+                      {name}
+                      <span className="comment">{description}</span>
+                    </td>
                     <td className="tdBoard">{unit}</td>
                     <td className="tdBoard">
-                      {price ? CurrencyHandler(item) : ""}
+                      {price ? priceHandler(item) : ""}
                     </td>
                     <td className="tdBoard">{currency}</td>
+                    <td className="tdBoard">{cost ? costHandler(item) : ""}</td>
                     <td className="tdBoard">{pack}</td>
                     <td className="tdBoard">{supplier}</td>
                     <td className="tdBoard tdacciones">
@@ -228,6 +299,7 @@ function Boards({ props }) {
                         className="actions"
                         props={{
                           name,
+                          description,
                           price,
                           unit,
                           supplier,

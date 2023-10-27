@@ -63,7 +63,8 @@ function FilterModal({ value, name, nameState, defaultValue, nameState2 }) {
 
   const handleNumber = () => {
     if (noPriceSwitch) {
-      nameState("&noPrice=true");
+      if (value.numericFilters == "price") nameState("&noPrice=true");
+      if (value.numericFilters == "cost") nameState("&noCost=true");
     } else {
       nameState(
         `&numericFilters=${value.numericFilters}${operator}${formValue}`
@@ -136,12 +137,22 @@ function FilterModal({ value, name, nameState, defaultValue, nameState2 }) {
                   autoFocus
                   onChange={(e) => setFormValue(e.target.value)}
                 />
-                <Form.Check
-                  onChange={() => setNoPriceSwitch(!noPriceSwitch)}
-                  type="switch"
-                  id="custom-switch"
-                  label="Sin precio"
-                />
+                {value.numericFilters == "price" && (
+                  <Form.Check
+                    onChange={() => setNoPriceSwitch(!noPriceSwitch)}
+                    type="switch"
+                    id="custom-switch"
+                    label="Sin precio"
+                  />
+                )}
+                {value.numericFilters == "cost" && (
+                  <Form.Check
+                    onChange={() => setNoPriceSwitch(!noPriceSwitch)}
+                    type="switch"
+                    id="custom-switch"
+                    label="Sin Costo"
+                  />
+                )}
               </Form.Group>
               <Form.Group
                 className="mb-3"

@@ -71,9 +71,15 @@ function EntityModal({ id }) {
             </div>
 
             <div className="singleData">
-              <h5>Precio:</h5>
+              <h5>Precio de Venta:</h5>
               <p>
                 {price?.currency} {price?.price}
+              </p>
+            </div>
+            <div className="singleData">
+              <h5>Precio de Costo:</h5>
+              <p>
+                {price?.cost && price?.currency} {price?.cost}
               </p>
             </div>
             <div className="singleData">

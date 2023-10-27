@@ -7,12 +7,24 @@ import InvoiceBoard from "../Boards/InvoiceBoard";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function CompanyModal({ props, setData }) {
+function CompanyModal({
+  props,
+  setData,
+  setPrintRender,
+  printData,
+  setPrintData,
+}) {
   const [show, setShow] = useState(false);
   const [company, setCompany] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const token = useSelector((state) => state.token.value);
 
+  function USDFormat(num) {
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+  function UYUFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
   async function getCompany() {
     try {
       const response = await axios({
@@ -58,6 +70,18 @@ function CompanyModal({ props, setData }) {
       >
         <Modal.Header closeButton>
           <Modal.Title>{company?.name}</Modal.Title>
+          <span className="modalHeaderData">
+            {" "}
+            Deuda Pesos : {company && UYUFormat(company.debtUyu)}
+          </span>
+          <span className="modalHeaderData">
+            {" "}
+            Deuda Dolares : {company && USDFormat(company.debtUsd)}
+          </span>
+          <span className="modalHeaderData">
+            {" "}
+            Rut : {company && company.rut}
+          </span>
         </Modal.Header>
         <Modal.Body>
           <InvoiceBoard
@@ -65,7 +89,11 @@ function CompanyModal({ props, setData }) {
               queryName: `&company=${props.name}`,
               name: props.name,
               _id: props._id,
+              modal: "&modal=true",
             }}
+            setPrintRender={setPrintRender}
+            printData={printData}
+            setPrintData={setPrintData}
           />
         </Modal.Body>
       </Modal>

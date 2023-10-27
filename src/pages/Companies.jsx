@@ -1,6 +1,5 @@
 import React from "react";
-import CompanyBoard from "../components/Boards/CompanyBoard";
-import Navbar from "../components/Navbar";
+import CompanyRenderSwap from "../components/RenderSwaps/CompanyRenderSwap";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -12,10 +11,7 @@ function Companies() {
       {!isLogged ? (
         <Navigate to="/login" replace={true} />
       ) : (
-        <div>
-          <Navbar></Navbar>
-          <CompanyBoard></CompanyBoard>
-        </div>
+        <CompanyRenderSwap />
       )}
     </>
   );

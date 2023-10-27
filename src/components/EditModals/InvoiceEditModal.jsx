@@ -10,10 +10,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 function InvoiceEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [serial, setSerial] = useState(props.serial);
-  const [price, setPrice] = useState(props.price);
-  const [currency, setCurrency] = useState(props.currency);
-  const [legalDate, setLegalDate] = useState(props.legalDate);
+  const [serial, setSerial] = useState("");
+  const [description, setDescription] = useState(null);
+  const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [legalDate, setLegalDate] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -29,6 +30,13 @@ function InvoiceEditModal({ props, setData }) {
   const token = useSelector((state) => state.token.value);
 
   async function updateInvoices() {
+    const formBody = {};
+    if (description !== null) formBody.description = description;
+    if (serial) formBody.serial = serial;
+    if (price) formBody.price = price;
+    if (currency) formBody.currency = currency;
+    if (legalDate) formBody.legalDate = legalDate;
+
     try {
       const response = await axios({
         method: "patch",
@@ -37,14 +45,7 @@ function InvoiceEditModal({ props, setData }) {
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          serial: serial,
-          price: price,
-          currency: currency,
-          company: props.company._id,
-          type: props.type,
-          legalDate: legalDate,
-        },
+        data: formBody,
       });
       setData(response);
       toast.success("Cambios Guardados");
@@ -68,6 +69,15 @@ function InvoiceEditModal({ props, setData }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                type="text"
+                autoFocus
+                onChange={(e) => setDescription(e.target.value)}
+                defaultValue={props.description}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Numero de Factura</Form.Label>
               <Form.Control

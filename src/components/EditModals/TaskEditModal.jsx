@@ -10,9 +10,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 function TaskEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [description, setDescription] = useState(props.description);
-  const [price, setPrice] = useState(props.price);
-  const [currency, setCurrency] = useState(props.currency);
+  const [description, setDescription] = useState("");
+  const [comment, setComment] = useState(null);
+  const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [pack, setPack] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -28,6 +30,12 @@ function TaskEditModal({ props, setData }) {
   const token = useSelector((state) => state.token.value);
 
   async function updateTasks() {
+    const formBody = {};
+    if (pack) formBody.pack = pack;
+    if (comment !== null) formBody.comment = comment;
+    if (description) formBody.description = description;
+    if (price) formBody.price = price;
+    if (currency) formBody.currency = currency;
     try {
       const response = await axios({
         method: "patch",
@@ -36,14 +44,7 @@ function TaskEditModal({ props, setData }) {
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          description: description,
-          price: price,
-          currency: currency,
-          customer: props.customer._id,
-          type: props.type,
-          updatedAt: Date.now,
-        },
+        data: formBody,
       });
       setData(response);
       toast.success("Cambios Guardados");
@@ -67,6 +68,22 @@ function TaskEditModal({ props, setData }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setComment(e.target.value)}
+                defaultValue={props.comment}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Grupo</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setPack(e.target.value)}
+                defaultValue={props.pack}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Descripcion</Form.Label>
               <Form.Control

@@ -1,6 +1,6 @@
 import React from "react";
 import "./taskBoard.css";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
@@ -12,10 +12,13 @@ import CreateTaskModal from "../CreateModals/CreateTaskModal";
 import CustomerModal from "../viewModal/CustomerModal";
 import { RiFilterOffFill } from "react-icons/ri";
 import PrintCustomerModal from "../PrintModals/PrintCustomerModal";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Boards({ props }) {
+function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [tasks, setTasks] = useState(null);
-  const [sort, setSort] = useState("createdAt");
+  const [sort, setSort] = useState("pack");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
@@ -26,6 +29,8 @@ function Boards({ props }) {
   const [customer, setCustomer] = useState(props?.queryName || "");
   const [data, setData] = useState("");
   const [modal, setModal] = useState(props?.modal || false);
+  const [pack, setPack] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -44,6 +49,40 @@ function Boards({ props }) {
       console.log(error);
     }
   }
+  async function update(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/tasks/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintTask = (id) => {
+    if (selectedColor) update(id);
+  };
+
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
+  }
+
   const cleanFilters = () => {
     setCustomer(props?.queryName || "");
     setNumericFilters("");
@@ -52,9 +91,10 @@ function Boards({ props }) {
     setOlderThan("");
     setCurrency("");
     setType("");
+    setPack("");
   };
   function USDFormat(num) {
-    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function UYUFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -88,7 +128,8 @@ function Boards({ props }) {
         type +
         newerThan +
         olderThan +
-        currency
+        currency +
+        pack
     );
   }
   useEffect(() => {
@@ -101,6 +142,7 @@ function Boards({ props }) {
     newerThan,
     olderThan,
     currency,
+    pack,
   ]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
@@ -171,21 +213,33 @@ function Boards({ props }) {
                 defaultValue="debt"
               />
             </th>
-            <th className="thBoard customer">
-              <h5>Cliente</h5>
-              <FaArrowUp onClick={() => sorter("-customer")} />
-              <FaArrowDown onClick={() => sorter("customer")} />
-              <FilterModal
-                nameState={setCustomer}
-                value="customer"
-                name="Cliente"
-              />
-            </th>
+            {!modal && (
+              <th className="thBoard customer">
+                <h5>Cliente</h5>
+                <FaArrowUp onClick={() => sorter("-customer")} />
+                <FaArrowDown onClick={() => sorter("customer")} />
+                <FilterModal
+                  nameState={setCustomer}
+                  value="customer"
+                  name="Cliente"
+                />
+              </th>
+            )}
+            {modal && (
+              <th className="thBoard customer">
+                <h5>Grupo</h5>
+                <FaArrowUp onClick={() => sorter("-pack")} />
+                <FaArrowDown onClick={() => sorter("pack")} />
+                <FilterModal nameState={setPack} value="pack" name="Grupo" />
+              </th>
+            )}
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
-              {tasks && modal && (
+              {tasks && modal && currency && (
                 <PrintCustomerModal
                   props={{ tasks: tasks, customerId: props._id }}
+                  setPrintRender={setPrintRender}
+                  printData={printData}
+                  setPrintData={setPrintData}
                 />
               )}
 
@@ -198,6 +252,10 @@ function Boards({ props }) {
                   _id: props?._id || "",
                 }}
               />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
             </th>
           </tr>
         </thead>
@@ -207,13 +265,17 @@ function Boards({ props }) {
               {tasks.list.map((item, index) => {
                 const {
                   description,
+                  comment,
                   price,
                   currency,
                   customer,
                   createdAt,
                   type,
+                  pack,
                   _id,
+                  color,
                 } = item;
+                let rowClass = colorClassHandler(index, color);
                 const typeHandler = (item) => {
                   if (item == "debt") return "Debe";
                   if (item == "payment") return "Paga";
@@ -221,36 +283,33 @@ function Boards({ props }) {
 
                 const dateResult = dateHandler(createdAt);
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintTask(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{description}</td>
+                    <td className="tdBoard">
+                      <>
+                        {description}
+                        <span className="comment">{comment}</span>
+                      </>
+                    </td>
                     <td className={"tdBoard " + type}>
                       {price ? CurrencyHandler(item) : ""}
                     </td>
                     <td className="tdBoard">{currency}</td>
                     <td className="tdBoard">{typeHandler(type)}</td>
-                    <td className="tdBoard">
-                      {customer?.name + " "}
-                      {!modal && (
-                        <CustomerModal
-                          props={{
-                            _id: customer?._id,
-                            sort,
-                            filters,
-                            modal: true,
-                            name: customer?.name,
-                          }}
-                          setData={setData}
-                          className="actions"
-                        />
-                      )}
-                    </td>
+                    {!modal && <td className="tdBoard">{customer?.name}</td>}
+                    {modal && <td className="tdBoard">{pack}</td>}
                     <td className="tdBoard tdacciones">
                       <TaskModal id={item._id} className="actions" />
                       <TaskEditModal
                         className="actions"
                         props={{
                           description,
+                          pack,
+                          comment,
                           price,
                           currency,
                           customer,

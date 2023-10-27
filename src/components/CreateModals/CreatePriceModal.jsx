@@ -12,8 +12,10 @@ function CreatePriceModal({ setData }) {
   const [show, setShow] = useState(false);
   const [price, setPrice] = useState("");
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [unit, setUnit] = useState("Unidad");
   const [currency, setCurrency] = useState("UYU");
+  const [cost, setCost] = useState("");
   const [pack, setPack] = useState("General");
   const [supplier, setSupplier] = useState("");
   const token = useSelector((state) => state.token.value);
@@ -29,7 +31,9 @@ function CreatePriceModal({ setData }) {
         },
         data: {
           name: name,
+          description: description,
           price: price,
+          cost: cost,
           unit: unit,
           currency: currency,
           pack: pack,
@@ -46,6 +50,7 @@ function CreatePriceModal({ setData }) {
 
   const cleanForm = () => {
     setName("");
+    setDescription("");
     setPrice("");
     setUnit("Unidad");
     setCurrency("UYU");
@@ -87,6 +92,13 @@ function CreatePriceModal({ setData }) {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>comentario</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
@@ -107,7 +119,7 @@ function CreatePriceModal({ setData }) {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>Precio de Venta</Form.Label>
               <Form.Control
                 type="number"
                 onChange={(e) => setPrice(e.target.value)}
@@ -122,6 +134,13 @@ function CreatePriceModal({ setData }) {
                 <option value="UYU"> Pesos </option>
                 <option value="USD">Dólares</option>
               </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+              <Form.Label>Precio de Costo</Form.Label>
+              <Form.Control
+                type="number"
+                onChange={(e) => setCost(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
               <Form.Label>Grupo</Form.Label>

@@ -5,11 +5,14 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
 import ReceiptModal from "../viewModal/ReceiptModal";
+import ReceiptEditModal from "../EditModals/ReceiptEditModal";
 import DeleteModal from "../DeleteModal";
 import FilterModal from "../FilterModal";
 import CreateReceiptModal from "../CreateModals/CreateReceiptModal";
-import ReceiptEditModal from "../EditModals/ReceiptEditModal";
 import { RiFilterOffFill } from "react-icons/ri";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Boards() {
   const [receipts, setReceipts] = useState(null);
@@ -23,6 +26,7 @@ function Boards() {
   const [olderThan, setOlderThan] = useState("");
   const [company, setCompany] = useState("");
   const [data, setData] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -40,6 +44,39 @@ function Boards() {
     } catch (error) {
       console.log(error);
     }
+  }
+  async function update(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/receipts/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintReceipt = (id) => {
+    if (selectedColor) update(id);
+  };
+
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
   }
   const cleanFilters = () => {
     setCompany("");
@@ -69,7 +106,7 @@ function Boards() {
     );
   }
   function USDFormat(num) {
-    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function UYUFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -174,9 +211,12 @@ function Boards() {
               />
             </th>
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
               <RiFilterOffFill onClick={cleanFilters} />
               <CreateReceiptModal setData={setData} />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
             </th>
           </tr>
         </thead>
@@ -187,24 +227,32 @@ function Boards() {
                 const {
                   number,
                   set,
+                  description,
                   price,
                   currency,
                   company,
                   legalDate,
                   invoices,
                   createdAt,
+                  color,
                   _id,
                 } = item;
-
+                let rowClass = colorClassHandler(index, color);
                 const dateResult = dateHandler(legalDate);
                 var invoiceNumbers = [];
                 invoices?.map((invoice) => {
-                  invoiceNumbers = [...invoiceNumbers, invoice.serial];
+                  invoiceNumbers = [...invoiceNumbers, invoice?.serial];
                 });
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintReceipt(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{number}</td>
+                    <td className="tdBoard">
+                      {number} <span className="comment">{description}</span>
+                    </td>
                     <td className="tdBoard">
                       {price ? CurrencyHandler(item) : ""}
                     </td>
@@ -218,6 +266,7 @@ function Boards() {
                         props={{
                           number,
                           set,
+                          description,
                           invoices,
                           price,
                           currency,

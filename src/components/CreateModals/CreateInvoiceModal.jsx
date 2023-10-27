@@ -15,6 +15,7 @@ function CreateInvoiceModal({ setData, props }) {
   const [companiesName, setCompaniesName] = useState(props?.name || "");
   const [selectedCompany, setSelectedCompany] = useState(props?._id || "");
   const [serial, setSerial] = useState("");
+  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("UYU");
   const [invoiceType, setInvoiceType] = useState("e-invoice");
@@ -48,6 +49,7 @@ function CreateInvoiceModal({ setData, props }) {
         },
         data: {
           serial: serial,
+          description: description,
           price: price,
           currency: currency,
           company: selectedCompany,
@@ -107,6 +109,14 @@ function CreateInvoiceModal({ setData, props }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                type="text"
+                autoFocus
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Numero de Factura</Form.Label>
               <Form.Control

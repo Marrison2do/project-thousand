@@ -1,18 +1,22 @@
 import React from "react";
 import "./customerBoard.css";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { FaArrowUp, FaArrowDown, FaFilter } from "react-icons/fa";
-import { AiFillEdit } from "react-icons/ai";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import FilterModal from "../FilterModal";
 import CustomerModal from "../viewModal/CustomerModal";
 import DeleteModal from "../DeleteModal";
 import CustomerEditModal from "../EditModals/CustomerEditModal";
 import CreateCustomerModal from "../CreateModals/CreateCustomerModal";
 import { RiFilterOffFill } from "react-icons/ri";
+import { BsWhatsapp } from "react-icons/bs";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Boards() {
+function Boards({ setPrintRender, printData, setPrintData }) {
   const [customers, setCustomers] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
@@ -23,6 +27,7 @@ function Boards() {
   const [newerUpdateThan, setNewerUpdateThan] = useState("");
   const [olderUpdateThan, setOlderUpdateThan] = useState("");
   const [data, setData] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -41,8 +46,42 @@ function Boards() {
       console.log(error);
     }
   }
+  async function updateCustomer(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/customers/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintCustomer = (id) => {
+    if (selectedColor) updateCustomer(id);
+  };
+
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
+  }
+
   function USDFormat(num) {
-    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function UYUFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -92,6 +131,15 @@ function Boards() {
   function sorter(param) {
     setSort(param);
   }
+
+  const navigate = useNavigate();
+
+  const wppHandler = (number) => {
+    const sliced = number.split(" ").join("").slice(1, 9);
+    const int = "598" + sliced;
+    const path = "https://wa.me/" + int;
+    return path;
+  };
 
   return (
     <div className="tablecontainer">
@@ -156,9 +204,12 @@ function Boards() {
               />
             </th>
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
               <RiFilterOffFill onClick={cleanFilters} />
               <CreateCustomerModal setData={setData} />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
             </th>
           </tr>
         </thead>
@@ -173,22 +224,37 @@ function Boards() {
                   debtUsd,
                   phoneNumber,
                   updatedAt,
+                  color,
                   _id,
                 } = item;
-
+                let rowClass = colorClassHandler(index, color);
                 const dateResult = dateHandler(updatedAt);
+                const wppResult = wppHandler(phoneNumber);
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintCustomer(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{name}</td>
                     <td className="tdBoard">{UYUFormat(debtUyu)}</td>
                     <td className="tdBoard">{USDFormat(debtUsd)}</td>
                     <td className="tdBoard">{description}</td>
-                    <td className="tdBoard">{phoneNumber}</td>
+                    <td className="tdBoard">
+                      {phoneNumber + " "}
+                      <a href={wppResult} target="blank">
+                        <BsWhatsapp />
+                      </a>
+                    </td>
                     <td className="tdBoard">{dateResult}</td>
                     <td className="tdBoard tdacciones">
                       <CustomerModal
                         props={{ _id, sort, filters, modal: true, name }}
+                        wppResult={wppResult}
                         setData={setData}
+                        setPrintRender={setPrintRender}
+                        printData={printData}
+                        setPrintData={setPrintData}
                         className="actions"
                       />
                       <CustomerEditModal

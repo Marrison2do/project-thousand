@@ -1,6 +1,5 @@
 import React from "react";
-import CustomerBoard from "../components/Boards/CustomerBoard";
-import Navbar from "../components/Navbar";
+import CustomerRenderSwap from "../components/RenderSwaps/CustomerRenderSwap";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -12,10 +11,7 @@ function Customers() {
       {!isLogged ? (
         <Navigate to="/login" replace={true} />
       ) : (
-        <div>
-          <Navbar></Navbar>
-          <CustomerBoard></CustomerBoard>
-        </div>
+        <CustomerRenderSwap />
       )}
     </>
   );

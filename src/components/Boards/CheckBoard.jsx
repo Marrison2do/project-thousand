@@ -10,6 +10,9 @@ import CheckModal from "../viewModal/CheckModal";
 import DeleteModal from "../DeleteModal";
 import CreateCheckModal from "../CreateModals/CreateCheckModal";
 import { RiFilterOffFill } from "react-icons/ri";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Boards() {
   const [checks, setChecks] = useState(null);
@@ -25,6 +28,7 @@ function Boards() {
   const [payBefore, setPayBefore] = useState("");
   const [customer, setCustomer] = useState("");
   const [data, setData] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -42,6 +46,39 @@ function Boards() {
     } catch (error) {
       console.log(error);
     }
+  }
+  async function update(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/checks/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintCheck = (id) => {
+    if (selectedColor) update(id);
+  };
+
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
   }
   const cleanFilters = () => {
     setCustomer("");
@@ -75,7 +112,7 @@ function Boards() {
     );
   }
   function USDFormat(num) {
-    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function UYUFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -185,9 +222,12 @@ function Boards() {
               />
             </th>
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
               <RiFilterOffFill onClick={cleanFilters} />
               <CreateCheckModal setData={setData} />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
             </th>
           </tr>
         </thead>
@@ -204,14 +244,19 @@ function Boards() {
                   paymentDate,
                   bank,
                   set,
+                  color,
                   _id,
                   task,
                 } = item;
-
+                let rowClass = colorClassHandler(index, color);
                 const checkInDay = dateHandler(createdAt);
                 const paymentDay = dateHandler(paymentDate);
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintCheck(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{checkInDay}</td>
                     <td className="tdBoard">{paymentDay}</td>
                     <td className="tdBoard">{bank}</td>

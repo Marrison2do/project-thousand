@@ -10,9 +10,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 function CustomerEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [description, setDescription] = useState(null);
+  const [name, setName] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
 
   const handleClose = () => {
     setShow(false);
@@ -29,9 +29,9 @@ function CustomerEditModal({ props, setData }) {
 
   async function updateCustomers() {
     const formBody = {};
-    if (description) formBody.description = description;
-    if (name) formBody.name = name;
-    if (phoneNumber) formBody.phoneNumber = phoneNumber;
+    if (description !== null) formBody.description = description;
+    if (name !== null) formBody.name = name;
+    if (phoneNumber !== null) formBody.phoneNumber = phoneNumber;
 
     try {
       const response = await axios({

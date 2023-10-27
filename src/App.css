@@ -1,11 +1,11 @@
 html {
-  background-color: rgb(39, 171, 138);
+  background-color: rgb(0, 153, 153);
   /* min-height: 100vh; */
 }
 
 .app {
   /* min-height: 100vh; */
-  background-color: rgb(39, 171, 138);
+  background-color: rgb(0, 153, 153);
 }
 
 body {
@@ -13,9 +13,60 @@ body {
 }
 
 .appButton {
-  background-color: rgb(39, 171, 138);
+  background-color: rgb(0, 153, 153);
   padding: 8px;
   color: white;
   border: none;
   border-radius: 5px;
+}
+.appButton:hover {
+  background-color: rgb(0, 101, 101);
+}
+.white-btn,
+.blue-btn,
+.green-btn,
+.purple-btn,
+.yellow-btn {
+  color: black;
+  border: solid 1px rgb(138, 138, 138);
+}
+.white-btn:hover,
+.blue-btn:hover,
+.green-btn:hover,
+.purple-btn:hover,
+.yellow-btn:hover {
+  color: black;
+  border: solid 1px rgb(0, 0, 0);
+}
+
+.white-btn {
+  background-color: rgb(255, 255, 255);
+}
+.blue-btn {
+  background-color: rgb(185, 201, 255);
+}
+.green-btn {
+  background-color: rgb(204, 255, 204);
+}
+.purple-btn {
+  background-color: rgb(204, 204, 255);
+}
+.yellow-btn {
+  background-color: rgb(255, 230, 153);
+}
+
+.white-btn:hover {
+  background-color: rgb(231, 231, 231);
+}
+.blue-btn:hover {
+  background-color: rgb(158, 173, 223);
+}
+.green-btn:hover {
+  background-color: rgb(153, 204, 153);
+}
+.purple-btn:hover {
+  background-color: rgb(173, 173, 255);
+}
+.yellow-btn:hover {
+  background-color: rgb(255, 204, 153);
 }

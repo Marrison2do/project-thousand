@@ -14,6 +14,7 @@ function CreateTaskModal({ setData, props }) {
   const [customersName, setCustomersName] = useState(props?.name || "");
   const [selectedCustomer, setSelectedCustomer] = useState(props?._id || "");
   const [description, setDescription] = useState("");
+  const [comment, setComment] = useState("");
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("UYU");
   const [type, setType] = useState("debt");
@@ -46,6 +47,7 @@ function CreateTaskModal({ setData, props }) {
         },
         data: {
           description: description,
+          comment: comment,
           price: price,
           currency: currency,
           customer: selectedCustomer,
@@ -93,7 +95,6 @@ function CreateTaskModal({ setData, props }) {
     setShow(true);
   };
   const handleKeyPress = useCallback((event) => {
-    console.log(event.key);
     if (event.key == "ArrowRight") {
       handleShow();
     }
@@ -123,6 +124,13 @@ function CreateTaskModal({ setData, props }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setComment(e.target.value)}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Descripción</Form.Label>
               <Form.Control

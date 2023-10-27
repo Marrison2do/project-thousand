@@ -11,10 +11,10 @@ import "react-toastify/dist/ReactToastify.css";
 function CompanyEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
   const [customers, setCustomers] = useState(null);
-  const [customerName, setCustomerName] = useState(props?.customer?.name);
-  const [customerId, setCustomerId] = useState(props?.customer?._id);
-  const [companyName, setCompanyName] = useState(props?.name);
-  const [rut, setRut] = useState(props?.rut);
+  const [customerName, setCustomerName] = useState("");
+  const [customerId, setCustomerId] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [rut, setRut] = useState("");
 
   const cleanForm = () => {
     setCustomerName(props?.customer?.name);
@@ -23,11 +23,6 @@ function CompanyEditModal({ props, setData }) {
     setRut(props?.rut);
   };
   const handleClose = () => {
-    console.log({
-      name: companyName,
-      customer: customerId,
-      rut: rut,
-    });
     setShow(false);
   };
   const update = () => {
@@ -58,6 +53,10 @@ function CompanyEditModal({ props, setData }) {
   }
 
   async function updateCompanies() {
+    const formBody = {};
+    if (companyName) formBody.name = companyName;
+    if (customerId) formBody.customer = customerId;
+    if (rut) formBody.rut = rut;
     try {
       const response = await axios({
         method: "patch",
@@ -66,11 +65,7 @@ function CompanyEditModal({ props, setData }) {
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          name: companyName,
-          customer: customerId,
-          rut: rut,
-        },
+        data: formBody,
       });
       setData(response);
       toast.success("Cambios Guardados");

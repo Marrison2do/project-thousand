@@ -1,24 +1,103 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { MdLocalPrintshop } from "react-icons/md";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-function Example() {
+function Example({ props, setPrintRender, printData, setPrintData }) {
   const [show, setShow] = useState(false);
+  const [interStage, setInterStage] = useState(false);
+  const [company, setCompany] = useState(null);
+  const [formValue, setFormValue] = useState("selected");
+  const [selected, setSelected] = useState(false);
+  const [total, setTotal] = useState(false);
+  const [prev, setPrev] = useState(null);
 
-  function handleShow() {
-    setShow(true);
+  const token = useSelector((state) => state.token.value);
+
+  async function getCompany() {
+    try {
+      const response = await axios({
+        method: "get",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/companies/${props.companyId}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setCompany(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
+  useEffect(() => {
+    getCompany();
+  }, []);
 
+  const handleInterStage = () => {
+    setFormValue("selected");
+    setInterStage(true);
+  };
+  const closeInterStage = () => {
+    setInterStage(false);
+    setFormValue("selected");
+    setSelected(false);
+    setTotal(false);
+    setPrev(null);
+  };
+  function handleShow() {
+    if (formValue == "selected") {
+      setSelected(true);
+    }
+    if (formValue == "total") {
+      setTotal(true);
+    }
+    console.log("a");
+    setPrintData({
+      company: company,
+      list: props.invoices.list,
+      formValue: formValue,
+    });
+    setPrintRender(true);
+  }
   return (
     <>
-      <Button className="me-2 mb-2" onClick={() => handleShow()}>
-        Full screen
-      </Button>
-      <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
+      <MdLocalPrintshop onClick={() => handleInterStage()}></MdLocalPrintshop>
+      <Modal show={interStage} onHide={closeInterStage}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal</Modal.Title>
+          <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Modal body content</Modal.Body>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Seleccion de Saldo</Form.Label>
+
+              <Form.Select
+                type="select"
+                autoFocus
+                defaultValue="UYU"
+                onChange={(e) => setFormValue(e.target.value)}
+              >
+                <option value="selected">Solo Seleccionado</option>
+                <option value="total">Total con Saldo anterior</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            ></Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeInterStage}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleShow}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

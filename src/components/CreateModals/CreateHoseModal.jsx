@@ -7,7 +7,7 @@ import priceList from "../../assets/hosePrices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function CreateItemModal({ cart, setCart, parentSetShow }) {
+function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -17,7 +17,6 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
   const [fittings, setFittings] = useState("");
   const [recover, setRecover] = useState(0);
   const [ferrule, setFerrule] = useState(2);
-  const [exchange, setExchange] = useState(40);
 
   const createHose = () => {
     const { PM, PH, PHC, OJO } = hoseSize;
@@ -81,6 +80,12 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
           singleHose = `Manguera ${hoseLength}m ` + singleHose;
           multiHose = singleHose;
         }
+        if (quantity == 1 && !hoseLength) {
+          multiHose = singleHose;
+        }
+        if (quantity > 1 && !hoseLength) {
+          multiHose = quantity + " x - " + singleHose;
+        }
         return { singleHose, multiHose };
       };
       setCart([
@@ -90,6 +95,7 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
           saveDescription: descriptionHandler().multiHose,
           singlePrice: parseFloat(singlePrice * exchange).toFixed(2),
           quantity: quantity,
+          unit: "Unidad",
           iva: true,
           dollar: false,
           saved: false,
@@ -136,9 +142,9 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
 
   return (
     <>
-      <button className="appButton" onClick={handleShow}>
+      <Button className="appButton" onClick={handleShow}>
         Manguera
-      </button>
+      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -204,14 +210,6 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
               <Form.Control
                 type="number"
                 placeholder={1}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>cotizacion</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder={40}
                 onChange={(e) => setQuantity(e.target.value)}
               />
             </Form.Group>

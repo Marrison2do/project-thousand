@@ -15,7 +15,6 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
 
   const createCylinder = () => {
     const sealCodeArray = sealsCodes.split("\n");
-    console.log(sealCodeArray);
     const sealArray = sealCodeArray.map((seal) => {
       return data.find(({ code }) => code == seal);
     });
@@ -39,8 +38,6 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
         sealSum = sealSum + parseInt(seal.price);
       });
 
-      console.log(descriptionArray);
-
       const descriptionHandler =
         "Recambio de Gato (" + descriptionArray.join(" - ") + ")";
       let saveDescription = descriptionHandler;
@@ -53,11 +50,11 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
         saveDescription: saveDescription,
         singlePrice: priceHandler,
         quantity: quantity,
+        unit: "Unidad",
         iva: true,
         saved: false,
         dollar: false,
       };
-      console.log(newCylinder);
       setCart([...cart, newCylinder]);
       setShow(false);
       parentSetShow(false);
@@ -76,9 +73,9 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
 
   return (
     <>
-      <button className="appButton" onClick={handleShow}>
+      <Button className="appButton" onClick={handleShow}>
         Gato
-      </button>
+      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

@@ -5,14 +5,11 @@ import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-function CreateReceiptModal({ setData }) {
+function TestingModal({ setData }) {
   const [show, setShow] = useState(false);
   const [companies, setCompanies] = useState(null);
   const [invoices, setInvoices] = useState("");
-  const [description, setDescription] = useState("");
   const [companiesName, setCompaniesName] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [number, setNumber] = useState("");
@@ -74,7 +71,6 @@ function CreateReceiptModal({ setData }) {
         data: {
           number: number,
           invoices: invoiceArray,
-          description: description,
           price: price,
           currency: currency,
           company: selectedCompany,
@@ -82,7 +78,6 @@ function CreateReceiptModal({ setData }) {
         },
       });
       setData(response);
-      toast.success("Recibo creado correctamente");
     } catch (error) {
       console.log(error);
     }
@@ -92,16 +87,54 @@ function CreateReceiptModal({ setData }) {
   }, [companiesName]);
 
   const handleCreate = async () => {
+    setShow(false);
     if (number && selectedCompany && price && legalDate) {
       const invoiceArray = await handleInvoice();
       createReceipt(invoiceArray);
-      setShow(false);
     } else {
-      toast.error("Requiere: Numero, Empresa, Precio, Fecha");
+      console.log("please fill the required fields");
     }
   };
 
   const handleClose = () => {
+    const array = invoices.split("\n");
+    const objectMap = array.map((item) => {
+      const itemSplit = item.split("_H_");
+      return { name: itemSplit[0], phone: itemSplit[1] };
+    });
+    console.log(objectMap);
+    // const sumArray = [{}];
+    // for (let i = 0; i < objectMap.length; i++) {
+    //   for (let j = 0; j < sumArray.length; j++) {
+    //     // console.log(objectMap[i].description);
+    //     // console.log(sumArray[j].description);
+    //     if (objectMap[i].description === sumArray[j].description) {
+    //       sumArray[j].amount =
+    //         parseFloat(sumArray[j].amount) + parseFloat(objectMap[i].amount);
+    //       // console.log("break");
+    //       break;
+    //     }
+    //     if (j + 1 == sumArray.length) {
+    //       // console.log("end");
+    //       sumArray.push(objectMap[i]);
+    //       sumArray[sumArray.length - 1].amount = parseFloat(
+    //         sumArray[sumArray.length - 1].amount / 2
+    //       );
+    //     }
+    //   }
+    // }
+    // console.log(sumArray);
+    // sumArray.sort((b, a) =>
+    //   a.amount > b.amount
+    //     ? 1
+    //     : a.amount === b.amount
+    //     ? a.description > b.description
+    //       ? 1
+    //       : -1
+    //     : -1
+    // );
+
+    // console.log(sumArray);
     setShow(false);
   };
 
@@ -131,26 +164,10 @@ function CreateReceiptModal({ setData }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Nuevo Recibo</Modal.Title>
+          <Modal.Title>Input</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Comentario</Form.Label>
-              <Form.Control
-                type="text"
-                autoFocus
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Numero del recibo</Form.Label>
-              <Form.Control
-                type="number"
-                autoFocus
-                onChange={(e) => setNumber(e.target.value)}
-              />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>facturas</Form.Label>
               <Form.Control
@@ -159,66 +176,13 @@ function CreateReceiptModal({ setData }) {
                 onChange={(e) => setInvoices(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Monto</Form.Label>
-              <Form.Control
-                type="number"
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-              <Form.Label>Moneda</Form.Label>
-              <Form.Select
-                type="select"
-                onChange={(e) => setCurrency(e.target.value)}
-              >
-                <option value="UYU"> Pesos </option>
-                <option value="USD">Dólares</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
-              <Form.Label>Fecha de Emision</Form.Label>
-              <Form.Control
-                type="date"
-                onChange={(e) => setLegalDate(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
-              <Form.Label>Empresa</Form.Label>
-              <Form.Control
-                type="text"
-                onChange={(e) => setCompaniesName(e.target.value)}
-              />
-              <Form.Select
-                type="select"
-                onChange={(e) => setSelectedCompany(e.target.value)}
-              >
-                <option value=""></option>
-                {companies ? (
-                  <>
-                    {companies.list.map((item, index) => {
-                      const { name, _id } = item;
-                      return (
-                        <option key={_id} value={_id}>
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <>
-                    <option value="">cargando</option>
-                  </>
-                )}
-              </Form.Select>
-            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleCreate}>
+          <Button variant="primary" onClick={handleClose}>
             Crear
           </Button>
         </Modal.Footer>
@@ -227,4 +191,4 @@ function CreateReceiptModal({ setData }) {
   );
 }
 
-export default CreateReceiptModal;
+export default TestingModal;

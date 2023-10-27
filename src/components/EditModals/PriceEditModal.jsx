@@ -12,10 +12,12 @@ function PriceEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
   const [price, setPrice] = useState("");
   const [name, setName] = useState("");
+  const [description, setDescription] = useState(null);
   const [unit, setUnit] = useState("");
   const [currency, setCurrency] = useState("");
   const [pack, setPack] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [cost, setCost] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -32,12 +34,14 @@ function PriceEditModal({ props, setData }) {
 
   async function updatePrice() {
     const formBody = {};
+    if (description !== null) formBody.description = description;
     if (name) formBody.name = name;
     if (price) formBody.price = price;
     if (unit) formBody.unit = unit;
     if (currency) formBody.currency = currency;
     if (pack) formBody.pack = pack;
     if (supplier) formBody.supplier = supplier;
+    if (cost) formBody.cost = cost;
 
     try {
       const response = await axios({
@@ -72,6 +76,14 @@ function PriceEditModal({ props, setData }) {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>comentario</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue={props.description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
@@ -94,7 +106,7 @@ function PriceEditModal({ props, setData }) {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>Precio de venta</Form.Label>
               <Form.Control
                 type="number"
                 defaultValue={props.price}
@@ -111,6 +123,14 @@ function PriceEditModal({ props, setData }) {
                 <option value="UYU"> Pesos </option>
                 <option value="USD">Dólares</option>
               </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+              <Form.Label>Precio de costo</Form.Label>
+              <Form.Control
+                type="number"
+                defaultValue={props.cost}
+                onChange={(e) => setCost(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
               <Form.Label>Grupo</Form.Label>

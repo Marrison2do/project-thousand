@@ -10,8 +10,16 @@ import FilterModal from "../FilterModal";
 import InvoiceEditModal from "../EditModals/InvoiceEditModal";
 import CreateInvoiceModal from "../CreateModals/CreateInvoiceModal";
 import { RiFilterOffFill } from "react-icons/ri";
+import ReceiptModal from "../viewModal/ReceiptModal";
+import ReceiptEditModal from "../EditModals/ReceiptEditModal";
+import CompanyModal from "../viewModal/CompanyModal";
+import PrintCompanyModal from "../PrintModals/PrintCompanyModal";
+import { FaCheck } from "react-icons/fa";
+import ColorSelectModal from "../EditModals/ColorSelectModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Boards({ props }) {
+function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [invoices, setInvoices] = useState(null);
   const [sort, setSort] = useState("number");
   const [filters, setFilters] = useState("");
@@ -23,6 +31,8 @@ function Boards({ props }) {
   const [olderThan, setOlderThan] = useState("");
   const [company, setCompany] = useState(props?.queryName || "");
   const [data, setData] = useState("");
+  const [modal, setModal] = useState(props?.modal || "");
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const token = useSelector((state) => state.token.value);
 
@@ -41,7 +51,32 @@ function Boards({ props }) {
       console.log(error);
     }
   }
+  async function updateTasks(id) {
+    try {
+      const response = await axios({
+        method: "patch",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/invoices/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          color: selectedColor,
+        },
+      });
+      setData(response);
+    } catch (error) {
+      toast.error("Error Interno");
+    }
+  }
+
+  const paintTask = (id) => {
+    if (selectedColor) updateTasks(id);
+  };
   const cleanFilters = () => {
+    if (!props?.modal) {
+      setModal("");
+    }
     setCompany(props?.queryName || "");
     setNumericFilters("");
     setPayed("");
@@ -51,7 +86,7 @@ function Boards({ props }) {
     setInvoiceType("");
   };
   function USDFormat(num) {
-    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "USD 1,");
+    return "USD " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function UYUFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -85,9 +120,16 @@ function Boards({ props }) {
         invoiceType +
         newerThan +
         olderThan +
-        currency
+        currency +
+        modal
     );
   }
+
+  const typeHandler = (param) => {
+    if (param == "receipt") return "Recibo";
+    if (param == "e-invoice") return "E-Factura";
+    if (param == "creditMemo") return "Nota de Crédito";
+  };
   useEffect(() => {
     filter();
   }, [
@@ -98,6 +140,7 @@ function Boards({ props }) {
     newerThan,
     olderThan,
     currency,
+    modal,
   ]);
   function dateHandler(date) {
     const parsedDate = date.split("-");
@@ -108,6 +151,16 @@ function Boards({ props }) {
   }
   function sorter(param) {
     setSort(param);
+  }
+  function colorClassHandler(index, color) {
+    let isEven = "";
+    if (index % 2 == 0) {
+      isEven = " even";
+    }
+    if (index % 2 !== 0) {
+      isEven = " odd";
+    }
+    return isEven + "-" + color;
   }
 
   return (
@@ -179,7 +232,14 @@ function Boards({ props }) {
               />
             </th>
             <th className="thBoard thacciones">
-              <h5>Acciones</h5>
+              {invoices && modal && currency && (
+                <PrintCompanyModal
+                  props={{ invoices: invoices, companyId: props._id }}
+                  setPrintRender={setPrintRender}
+                  printData={printData}
+                  setPrintData={setPrintData}
+                />
+              )}
               <RiFilterOffFill onClick={cleanFilters} />
               <CreateInvoiceModal
                 setData={setData}
@@ -187,6 +247,10 @@ function Boards({ props }) {
                   name: props?.name || "",
                   _id: props?._id || "",
                 }}
+              />
+              <ColorSelectModal
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
               />
             </th>
           </tr>
@@ -198,48 +262,114 @@ function Boards({ props }) {
                 const {
                   serial,
                   price,
+                  description,
                   currency,
                   company,
                   legalDate,
                   invoiceType,
                   createdAt,
                   _id,
+                  payed,
+                  color,
+                  number,
+                  invoices,
+                  set,
                 } = item;
+                let rowClass = colorClassHandler(index, color);
+                if (invoiceType == "receipt") {
+                  var isReceipt = true;
+                }
 
                 const dateResult = dateHandler(legalDate);
                 return (
-                  <tr className="trBoard" key={index}>
+                  <tr
+                    className={"trBoard" + rowClass}
+                    onClick={() => paintTask(_id)}
+                    key={index}
+                  >
                     <td className="tdBoard">{dateResult}</td>
-                    <td className="tdBoard">{serial}</td>
                     <td className="tdBoard">
+                      {serial ? serial + " " : item.number}
+                      {payed && <FaCheck />}
+                      <span className="comment">{description}</span>
+                    </td>
+                    <td className={"tdBoard " + invoiceType}>
                       {price ? CurrencyHandler(item) : ""}
                     </td>
                     <td className="tdBoard">{currency}</td>
-                    <td className="tdBoard">{invoiceType}</td>
-                    <td className="tdBoard">{company?.name}</td>
+                    <td className="tdBoard">{typeHandler(invoiceType)}</td>
+                    <td className="tdBoard">
+                      {company?.name + " "}
+                      {/* {!modal && (
+                        <CompanyModal
+                          props={{
+                            _id: company?._id,
+                            sort,
+                            filters,
+                            modal: true,
+                            name: company?.name,
+                          }}
+                          setData={setData}
+                          className="actions"
+                        />
+                      )} */}
+                    </td>
                     <td className="tdBoard tdacciones">
-                      <InvoiceModal id={item._id} className="actions" />
-                      <InvoiceEditModal
-                        className="actions"
-                        props={{
-                          serial,
-                          price,
-                          currency,
-                          company,
-                          legalDate,
-                          createdAt,
-                          _id,
-                        }}
-                        setData={setData}
-                      />
-                      <DeleteModal
-                        className="actions"
-                        props={{
-                          collection: "invoices",
-                          _id,
-                        }}
-                        setData={setData}
-                      />
+                      {isReceipt ? (
+                        <>
+                          <ReceiptModal id={item._id} className="actions" />
+                          <ReceiptEditModal
+                            className="actions"
+                            props={{
+                              number,
+                              description,
+                              set,
+                              invoices,
+                              price,
+                              currency,
+                              company,
+                              legalDate,
+                              createdAt,
+                              _id,
+                            }}
+                            setData={setData}
+                          />
+                          <DeleteModal
+                            className="actions"
+                            props={{
+                              collection: "receipts",
+                              _id,
+                            }}
+                            setData={setData}
+                          />{" "}
+                        </>
+                      ) : (
+                        <>
+                          <InvoiceModal id={item._id} className="actions" />
+                          <InvoiceEditModal
+                            className="actions"
+                            props={{
+                              serial,
+                              description,
+                              price,
+                              currency,
+                              company,
+                              legalDate,
+                              createdAt,
+                              _id,
+                            }}
+                            setData={setData}
+                          />
+                          <DeleteModal
+                            className="actions"
+                            props={{
+                              collection: "invoices",
+                              _id,
+                            }}
+                            setData={setData}
+                          />
+                        </>
+                      )}
                     </td>
                   </tr>
                 );

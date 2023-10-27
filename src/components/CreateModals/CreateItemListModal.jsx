@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function CreateItemModal({ cart, setCart, parentSetShow }) {
+function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [exchange, setExchange] = useState(40);
   const [itemString, setItemString] = useState("");
   const [priceList, setPriceList] = useState(null);
   const [selectedItem, setSelectedItem] = useState("");
@@ -38,6 +39,10 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
   }, [itemString]);
 
   const createItem = () => {
+    if (!selectedItem) {
+      toast.error("Seleccionar");
+      return;
+    }
     if (selectedItem.currency == "USD") {
       selectedItem.price = selectedItem.price * exchange;
     }
@@ -57,6 +62,7 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
         description: selectedItem.name,
         saveDescription: saveDescription,
         singlePrice: parseFloat(selectedItem.price).toFixed(2),
+        unit: selectedItem.unit,
         quantity: quantity,
         iva: true,
         dollar: false,
@@ -83,9 +89,9 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
 
   return (
     <>
-      <button className="appButton" onClick={handleShow}>
+      <Button className="appButton" onClick={handleShow}>
         Lista de Precios
-      </button>
+      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -96,6 +102,7 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
               <Form.Label>Artículo</Form.Label>
               <Form.Control
+                autoFocus
                 type="text"
                 onChange={(e) => setItemString(e.target.value)}
               />
@@ -103,17 +110,19 @@ function CreateItemModal({ cart, setCart, parentSetShow }) {
                 type="select"
                 onChange={(e) => {
                   setSelectedItem(priceList.list[e.target.value]);
-                  console.log(selectedItem);
                 }}
               >
                 <option value=""></option>
                 {priceList ? (
                   <>
                     {priceList.list.map((item, index) => {
-                      const { name, _id } = item;
+                      const { name, description, supplier, _id } = item;
                       return (
                         <option key={_id} value={index}>
                           {name}
+                          {" - ("} {description && description + " - "}
+                          {supplier}
+                          {" )"}
                         </option>
                       );
                     })}

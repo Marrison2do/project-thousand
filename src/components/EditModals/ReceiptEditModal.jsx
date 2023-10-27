@@ -10,11 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 function ReceiptEditModal({ props, setData }) {
   const [show, setShow] = useState(false);
-  const [invoices, setInvoices] = useState(invoiceText);
-  const [number, setNumber] = useState(props.number);
-  const [price, setPrice] = useState(props.price);
-  const [currency, setCurrency] = useState(props.currency);
-  const [legalDate, setLegalDate] = useState(props.legalDate);
+  const [invoices, setInvoices] = useState("");
+  const [description, setDescription] = useState(null);
+  const [number, setNumber] = useState("");
+  const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [legalDate, setLegalDate] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -62,6 +63,14 @@ function ReceiptEditModal({ props, setData }) {
   const token = useSelector((state) => state.token.value);
 
   async function updateReceipts(invoiceArray) {
+    const formBody = {};
+    if (description !== null) formBody.description = description;
+    if (number) formBody.number = number;
+    if (price) formBody.price = price;
+    if (currency) formBody.currency = currency;
+    if (legalDate) formBody.legalDate = legalDate;
+    if (invoiceArray) formBody.invoices = invoiceArray;
+
     try {
       const response = await axios({
         method: "patch",
@@ -70,15 +79,7 @@ function ReceiptEditModal({ props, setData }) {
         headers: {
           Authorization: "Bearer " + token,
         },
-        data: {
-          number: number,
-          price: price,
-          currency: currency,
-          company: props.company._id,
-          type: props.type,
-          legalDate: legalDate,
-          invoices: invoiceArray,
-        },
+        data: formBody,
       });
       setData(response);
       toast.success("Cambios Guardados");
@@ -102,6 +103,14 @@ function ReceiptEditModal({ props, setData }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+                defaultValue={props.description}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Numero del recibo</Form.Label>
               <Form.Control

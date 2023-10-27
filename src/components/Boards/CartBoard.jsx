@@ -2,19 +2,39 @@ import React from "react";
 import "./taskBoard.css";
 import { useState, useEffect } from "react";
 import CreateItemModal from "../CreateModals/CreateItemModal";
-import { AiFillDollarCircle } from "react-icons/ai";
+import { AiFillDollarCircle, AiFillCopy } from "react-icons/ai";
 import { RiPercentFill } from "react-icons/ri";
 import { BsCheckCircleFill } from "react-icons/bs";
 import SaveHoseModal from "../CreateModals/SaveHoseModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CartItemEditModal from "../EditModals/CartItemEditModal";
+
+import axios from "axios";
 
 const HosesBoard = () => {
   const [cart, setCart] = useState([]);
   const [USDtotal, setUSDtotal] = useState(0);
   const [UYUtotal, setUYUtotal] = useState(0);
+  const [exchange, setExchange] = useState(null);
   const [USDiva, setUSDiva] = useState(true);
   const [UYUiva, setUYUiva] = useState(true);
+
+  async function checkExchange() {
+    try {
+      const response = await axios({
+        method: "get",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `https://cotizaciones-brou-v2-e449.fly.dev/currency/latest`,
+      });
+      const middle =
+        (response.data.rates.USD.buy + response.data.rates.USD.sell) / 2;
+      setExchange(middle);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error Interno");
+    }
+  }
 
   const ivaHandler = (index) => {
     if (cart[index].iva == true) {
@@ -37,6 +57,7 @@ const HosesBoard = () => {
   let totalSum = { USDSum: 0, UYUSum: 0 };
 
   useEffect(() => {
+    checkExchange();
     totalSum.USDSum = 0;
     totalSum.UYUSum = 0;
     let map = cart.map((item) => {
@@ -69,7 +90,7 @@ const HosesBoard = () => {
   const currencyHandler = (index) => {
     if (cart[index].dollar == true) {
       cart[index].singlePrice = parseFloat(
-        cart[index].singlePrice * 40
+        cart[index].singlePrice * exchange
       ).toFixed(2);
       cart[index].dollar = false;
       setCart([...cart]);
@@ -77,7 +98,7 @@ const HosesBoard = () => {
     }
     if (cart[index].dollar == false) {
       cart[index].singlePrice = parseFloat(
-        cart[index].singlePrice / 40
+        cart[index].singlePrice / exchange
       ).toFixed(2);
       cart[index].dollar = true;
       setCart([...cart]);
@@ -99,8 +120,11 @@ const HosesBoard = () => {
             <th className="thBoard thacciones">cantidad</th>
             <th className="thBoard thacciones">Precio Total</th>
             <th className="thBoard thacciones">
-              {" "}
-              Nuevo <CreateItemModal cart={cart} setCart={setCart} />
+              <CreateItemModal
+                cart={cart}
+                setCart={setCart}
+                exchange={exchange}
+              />
             </th>
           </tr>
         </thead>
@@ -122,15 +146,22 @@ const HosesBoard = () => {
 
                 return (
                   <tr className="trBoard" key={index}>
-                    <td className="tdBoard" onClick={() => copy(description)}>
-                      {description}
+                    <td className="tdBoard">
+                      {description}{" "}
+                      <AiFillCopy
+                        onClick={() => copy(description)}
+                      ></AiFillCopy>
                     </td>
-                    <td className="tdBoard" onClick={() => copy(singlePrice)}>
-                      {displayPrice(singlePrice)}
+                    <td className="tdBoard">
+                      {displayPrice(singlePrice)}{" "}
+                      <AiFillCopy
+                        onClick={() => copy(singlePrice)}
+                      ></AiFillCopy>
                     </td>
                     <td className="tdBoard">{quantity}</td>
-                    <td className="tdBoard " onClick={() => copy(totalPrice)}>
+                    <td className="tdBoard ">
                       {displayPrice(totalPrice)}
+                      <AiFillCopy onClick={() => copy(totalPrice)}></AiFillCopy>
                     </td>
                     <td className="tdBoard tdacciones">
                       <RiPercentFill
@@ -144,10 +175,16 @@ const HosesBoard = () => {
                       {saved ? (
                         <BsCheckCircleFill className="actions" />
                       ) : (
-                        <SaveHoseModal
-                          className="actions"
-                          props={{ cart, index, setCart }}
-                        />
+                        <>
+                          <CartItemEditModal
+                            className="actions"
+                            props={{ cart, index, setCart }}
+                          />
+                          <SaveHoseModal
+                            className="actions"
+                            props={{ cart, index, setCart }}
+                          />
+                        </>
                       )}
                     </td>
                   </tr>
@@ -167,9 +204,21 @@ const HosesBoard = () => {
                 <td className="tdBoard"></td>
                 <td className="tdBoard ">
                   {UYUiva ? (
-                    <>$ {parseFloat(UYUtotal).toFixed(2)} Iva Inc.</>
+                    <>
+                      $ {parseFloat(UYUtotal).toFixed(2)} Iva Inc.{" "}
+                      <AiFillCopy
+                        onClick={() => copy(parseFloat(UYUtotal).toFixed(2))}
+                      ></AiFillCopy>
+                    </>
                   ) : (
-                    <>$ {parseFloat(UYUtotal / 1.22).toFixed(2)} mas IVA</>
+                    <>
+                      $ {parseFloat(UYUtotal / 1.22).toFixed(2)} mas IVA{" "}
+                      <AiFillCopy
+                        onClick={() =>
+                          copy(parseFloat(UYUtotal / 1.22).toFixed(2))
+                        }
+                      ></AiFillCopy>
+                    </>
                   )}
                 </td>
                 <td className="tdBoard tdacciones">
@@ -183,7 +232,17 @@ const HosesBoard = () => {
                 <td className="tdBoard">Total Dólares</td>
                 <td className="tdBoard"></td>
                 <td className="tdBoard"></td>
-                <td className="tdBoard ">
+                <td
+                  className="tdBoard "
+                  onClick={() => {
+                    if (USDiva) {
+                      copy(parseFloat(USDtotal).toFixed(2));
+                    }
+                    if (!USDiva) {
+                      copy(parseFloat(USDtotal / 1.22).toFixed(2));
+                    }
+                  }}
+                >
                   {USDiva ? (
                     <>USD {parseFloat(USDtotal).toFixed(2)} Iva Inc.</>
                   ) : (
