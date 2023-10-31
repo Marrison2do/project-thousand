@@ -9,7 +9,7 @@ import SaveHoseModal from "../CreateModals/SaveHoseModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CartItemEditModal from "../EditModals/CartItemEditModal";
-
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 const HosesBoard = () => {
@@ -20,19 +20,29 @@ const HosesBoard = () => {
   const [USDiva, setUSDiva] = useState(true);
   const [UYUiva, setUYUiva] = useState(true);
 
+  const token = useSelector((state) => state.token.value);
+
   async function checkExchange() {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `https://cotizaciones-brou-v2-e449.fly.dev/currency/latest`,
+        baseURL: `http://localhost:5000/api/v1/exchange`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       });
-      const middle =
-        (response.data.rates.USD.buy + response.data.rates.USD.sell) / 2;
-      setExchange(middle);
+
+      console.log(response);
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(
+        response.data.exchangeRate,
+        "text/xml"
+      );
+      const cot = xmlDoc.getElementsByTagName("TCC")[0].childNodes[0].nodeValue;
+      setExchange(cot);
     } catch (error) {
       console.log(error);
-      toast.error("Error Interno");
     }
   }
 
@@ -125,6 +135,9 @@ const HosesBoard = () => {
                 setCart={setCart}
                 exchange={exchange}
               />
+              {exchange && (
+                <span>Dolar : {parseFloat(exchange).toFixed(2)}</span>
+              )}
             </th>
           </tr>
         </thead>

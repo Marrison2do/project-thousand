@@ -38,6 +38,10 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
     getPriceList();
   }, [itemString]);
 
+  useEffect(() => {
+    console.log(selectedItem);
+  }, [selectedItem]);
+
   const createItem = () => {
     if (!selectedItem) {
       toast.error("Seleccionar");
