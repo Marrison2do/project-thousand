@@ -109,8 +109,8 @@ const CustomerPrintSheet = ({ setPrintRender, printData, setPrintData }) => {
     <>
       <Image src={logo} fluid />
       <Image src={data} fluid />
-      <h1>{printData.customer.name}</h1>
       <div className="tablecontainer printcontainer">
+        <h1>{printData.customer.name}</h1>
         <table className="customerBoard">
           <thead>
             <tr className="trBoard">

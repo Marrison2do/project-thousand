@@ -5,12 +5,14 @@ import CreateItemModal from "../CreateModals/CreateItemModal";
 import { AiFillDollarCircle, AiFillCopy } from "react-icons/ai";
 import { RiPercentFill } from "react-icons/ri";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { LuRefreshCcw } from "react-icons/lu";
 import SaveHoseModal from "../CreateModals/SaveHoseModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CartItemEditModal from "../EditModals/CartItemEditModal";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import ExchangeEditModal from "../EditModals/ExchangeEditModal";
 
 const HosesBoard = () => {
   const [cart, setCart] = useState([]);
@@ -32,15 +34,14 @@ const HosesBoard = () => {
           Authorization: "Bearer " + token,
         },
       });
-
-      console.log(response);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(
         response.data.exchangeRate,
         "text/xml"
       );
-      const cot = xmlDoc.getElementsByTagName("TCC")[0].childNodes[0].nodeValue;
-      setExchange(cot);
+      const list = xmlDoc.getElementsByTagName("TCC");
+      const lastExchangeRate = list[list.length - 1].childNodes[0].nodeValue;
+      setExchange(lastExchangeRate);
     } catch (error) {
       console.log(error);
     }
@@ -68,6 +69,8 @@ const HosesBoard = () => {
 
   useEffect(() => {
     checkExchange();
+  }, []);
+  useEffect(() => {
     totalSum.USDSum = 0;
     totalSum.UYUSum = 0;
     let map = cart.map((item) => {
@@ -136,7 +139,13 @@ const HosesBoard = () => {
                 exchange={exchange}
               />
               {exchange && (
-                <span>Dolar : {parseFloat(exchange).toFixed(2)}</span>
+                <>
+                  <ExchangeEditModal
+                    exchange={exchange}
+                    setExchange={setExchange}
+                  ></ExchangeEditModal>
+                  <LuRefreshCcw onClick={checkExchange}></LuRefreshCcw>
+                </>
               )}
             </th>
           </tr>
