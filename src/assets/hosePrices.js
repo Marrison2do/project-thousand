@@ -48,7 +48,7 @@ const data = {
     rec: 3,
   },
   inch: {
-    name: '1"',
+    name: "1'",
     PM: 18.68,
     PH: 19.69,
     PHC: 31.08,
@@ -74,7 +74,7 @@ const data = {
     rec: 3,
   },
   inchRTwelve: {
-    name: '1" R12',
+    name: "1' R12",
     PM: 18.68,
     PH: 19.69,
     PHC: 31.08,

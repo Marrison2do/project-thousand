@@ -1,22 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { ImPlus } from "react-icons/im";
-import priceList from "../../assets/hosePrices";
+// import priceList from "../../assets/hosePrices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
   const [show, setShow] = useState(false);
+  const [priceList, setPriceList] = useState(null);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [hoseSize, setHoseSize] = useState(priceList.oneFourth);
+  const [hoseSize, setHoseSize] = useState(priceList?.oneFourth);
   const [hoseLength, setHoseLength] = useState(0);
   const [fittings, setFittings] = useState("");
   const [recover, setRecover] = useState(0);
   const [ferrule, setFerrule] = useState(2);
+
+  const token = useSelector((state) => state.token.value);
+
+  async function checkPrices() {
+    try {
+      const response = await axios({
+        method: "get",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/globals/655dfbc4423b5e04849a7c93`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setPriceList(response.data.data);
+      setHoseSize(priceList?.oneFourth);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    checkPrices();
+  }, []);
 
   const createHose = () => {
     const { PM, PH, PHC, OJO } = hoseSize;
@@ -126,18 +151,18 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
   };
 
   const hosesValues = [
-    priceList.oneFourth,
-    priceList.threeEight,
-    priceList.half,
-    priceList.fiveEight,
-    priceList.threeFourth,
-    priceList.inch,
-    priceList.fiveEightRTwelve,
-    priceList.threeFourthRTwelve,
-    priceList.inchRTwelve,
-    priceList.threeFourthRThirteen,
-    priceList.xtFlexRTwelve,
-    priceList.xtFlexRThirteen,
+    priceList?.oneFourth,
+    priceList?.threeEight,
+    priceList?.half,
+    priceList?.fiveEight,
+    priceList?.threeFourth,
+    priceList?.inch,
+    priceList?.fiveEightRTwelve,
+    priceList?.threeFourthRTwelve,
+    priceList?.inchRTwelve,
+    priceList?.threeFourthRThirteen,
+    priceList?.xtFlexRTwelve,
+    priceList?.xtFlexRThirteen,
   ];
 
   return (
