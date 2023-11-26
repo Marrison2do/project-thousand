@@ -165,3 +165,17 @@
   padding-left: 20px;
   font-weight: bolder;
 }
+
+.pricebar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 10px 10px;
+}
+
+.pricebar button {
+  margin: 5px;
+}

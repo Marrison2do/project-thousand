@@ -10,9 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 function CreateCylinderModal({ cart, setCart, parentSetShow }) {
   const [show, setShow] = useState(false);
   const [sealsCodes, SetSealsCodes] = useState("");
-  const [workForcePrice, setWorkForcePrice] = useState(1000);
+  const [workForcePrice, setWorkForcePrice] = useState(1200);
   const [quantity, setQuantity] = useState(1);
-
   const createCylinder = () => {
     const sealCodeArray = sealsCodes.split("\n");
     const sealArray = sealCodeArray.map((seal) => {
@@ -96,7 +95,7 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
               <Form.Label>mano de obra</Form.Label>
               <Form.Control
                 type="number"
-                placeholder={1000}
+                placeholder={1200}
                 onChange={(e) => setWorkForcePrice(e.target.value)}
               />
             </Form.Group>
