@@ -16,7 +16,12 @@ const HosePricesBoard = () => {
           Authorization: "Bearer " + token,
         },
       });
-      console.log(response.data.list[0]);
+
+      for (const [key, value] of Object.entries(response.data.list[0].data)) {
+        console.log(`${key}: ${value}`);
+      }
+
+      console.log(Object.keys(response.data.list[0].data));
       setData(response.data.list[0]);
     } catch (error) {
       console.log(error);
