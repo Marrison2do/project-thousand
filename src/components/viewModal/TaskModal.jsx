@@ -32,12 +32,8 @@ function EntityModal({ id }) {
     getTask();
     setShow(true);
   };
-  const handleHour = (day, month, utcHour) => {
-    const parsedDay = parseInt(day);
-    const parsedMonth = parseInt(month);
+  const handleHour = (utcHour) => {
     const parsedUtcHour = parseInt(utcHour);
-    if (parsedMonth < 3 || parsedMonth > 9) return parsedUtcHour - 4;
-    if (parsedMonth == 3 && parsedDay < 10) return parsedUtcHour - 4;
     return parsedUtcHour - 3;
   };
 

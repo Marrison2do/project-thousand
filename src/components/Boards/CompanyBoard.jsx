@@ -13,6 +13,7 @@ import { RiFilterOffFill } from "react-icons/ri";
 import ColorSelectModal from "../EditModals/ColorSelectModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CreateFilledCompanyModal from "../CreateModals/CreateFilledCompany";
 
 function Boards({ setPrintRender, printData, setPrintData }) {
   const [companies, setCompanies] = useState(null);
@@ -194,6 +195,7 @@ function Boards({ setPrintRender, printData, setPrintData }) {
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
               />
+              <CreateFilledCompanyModal setData={setData} />
             </th>
           </tr>
         </thead>

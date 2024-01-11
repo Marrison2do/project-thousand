@@ -15,6 +15,7 @@ import { BsWhatsapp } from "react-icons/bs";
 import ColorSelectModal from "../EditModals/ColorSelectModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CreateFilledCustomerModal from "../CreateModals/CreateFilledCustomer";
 
 function Boards({ setPrintRender, printData, setPrintData }) {
   const [customers, setCustomers] = useState(null);
@@ -210,6 +211,7 @@ function Boards({ setPrintRender, printData, setPrintData }) {
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
               />
+              <CreateFilledCustomerModal setData={setData} />
             </th>
           </tr>
         </thead>
