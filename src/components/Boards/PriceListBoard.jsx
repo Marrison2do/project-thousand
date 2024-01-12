@@ -13,6 +13,7 @@ import PriceModal from "../viewModal/PriceModal";
 import ColorSelectModal from "../EditModals/ColorSelectModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CreateBulkPriceModal from "../CreateModals/CreatebulkPricesModal";
 
 function Boards({ props }) {
   const [prices, setPrices] = useState(null);
@@ -252,6 +253,7 @@ function Boards({ props }) {
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
               />
+              <CreateBulkPriceModal setData={setData} />
             </th>
           </tr>
         </thead>
