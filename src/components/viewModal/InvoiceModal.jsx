@@ -95,7 +95,11 @@ function EntityModal({ id }) {
             </div>
             <div className="singleData">
               <h5>Estado de Cobro:</h5>
-              <p>{payed(invoice?.payed)}</p>
+              {invoice?.legalDate.includes("19:00") ? (
+                <p>Legado</p>
+              ) : (
+                <p>{payed(invoice?.payed)}</p>
+              )}
             </div>
             <div className="singleData">
               <h5>Fecha de actualización:</h5>

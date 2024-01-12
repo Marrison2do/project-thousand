@@ -257,7 +257,14 @@ function Boards() {
                       {price ? CurrencyHandler(item) : ""}
                     </td>
                     <td className="tdBoard">{currency}</td>
-                    <td className="tdBoard">N:{invoiceNumbers.join(", N:")}</td>
+                    {invoiceNumbers.length > 0 && (
+                      <td className="tdBoard">
+                        N:{invoiceNumbers.join(", N:")}
+                      </td>
+                    )}
+                    {invoiceNumbers.length == 0 && (
+                      <td className="tdBoard">Legado</td>
+                    )}
                     <td className="tdBoard">{company?.name}</td>
                     <td className="tdBoard tdacciones">
                       <ReceiptModal id={item._id} className="actions" />

@@ -38,11 +38,35 @@ function CreateFilledCompanyModal({ setData }) {
   }
 
   async function createCompany() {
+    let mainArray = invoiceListString.split("\n");
+    let invoiceArray = [];
+    let receiptArray = [];
+    for (let i = 0; i < mainArray.length; i++) {
+      let split = mainArray[i].split("\t");
+      if (split[0] == "recibo") {
+        receiptArray.push({
+          legalDate: split[1],
+          number: split[2],
+          invoiceType: split[3],
+          price: split[4],
+          currency: split[5],
+        });
+      }
+      if (split[0] == "factura") {
+        invoiceArray.push({
+          legalDate: split[1] + "T19:00:00.148Z",
+          serial: split[2],
+          invoiceType: split[3],
+          price: split[4],
+          currency: split[5],
+        });
+      }
+    }
     try {
       const response = await axios({
         method: "post",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/companies`,
+        baseURL: `http://localhost:5000/api/v1/companies/filled`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -50,6 +74,10 @@ function CreateFilledCompanyModal({ setData }) {
           name: companyName,
           customer: customerId,
           rut: rut,
+          debtUsd: debtUsd,
+          debtUyu: debtUyu,
+          invoiceList: invoiceArray,
+          receiptList: receiptArray,
         },
       });
       setData(response);
