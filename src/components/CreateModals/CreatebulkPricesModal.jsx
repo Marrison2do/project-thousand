@@ -12,24 +12,32 @@ function CreateBulkPriceModal({ setData }) {
   const [show, setShow] = useState(false);
   const [priceList, setPriceList] = useState("");
 
+  const token = useSelector((state) => state.token.value);
+
   async function createPrice() {
+    let priceArray = priceList.split("\n");
+    for (let i = 0; i < priceArray.length; i++) {
+      let priceSplit = priceArray[i].split("\t");
+      priceArray[i] = {
+        name: priceSplit[0],
+        unit: priceSplit[1],
+        supplier: priceSplit[2],
+        pack: priceSplit[3],
+        price: priceSplit[4],
+        cost: priceSplit[5],
+        currency: priceSplit[6],
+      };
+    }
     try {
       const response = await axios({
         method: "post",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/prices`,
+        baseURL: `http://localhost:5000/api/v1/prices/bulk`,
         headers: {
           Authorization: "Bearer " + token,
         },
         data: {
-          //   name: name,
-          //   description: description,
-          //   price: price,
-          //   cost: cost,
-          //   unit: unit,
-          //   currency: currency,
-          //   pack: pack,
-          //   supplier: supplier,
+          priceList: priceArray,
         },
       });
       setData(response);
@@ -49,12 +57,8 @@ function CreateBulkPriceModal({ setData }) {
   };
 
   const handleCreate = () => {
-    if (name) {
-      createPrice();
-      setShow(false);
-    } else {
-      toast.error("Requiere Nombre");
-    }
+    createPrice();
+    setShow(false);
   };
 
   const handleShow = () => {
