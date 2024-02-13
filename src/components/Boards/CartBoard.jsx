@@ -13,7 +13,6 @@ import CartItemEditModal from "../EditModals/CartItemEditModal";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import ExchangeEditModal from "../EditModals/ExchangeEditModal";
-// test
 const HosesBoard = () => {
   const [cart, setCart] = useState([]);
   const [USDtotal, setUSDtotal] = useState(0);
