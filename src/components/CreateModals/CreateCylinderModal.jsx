@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -6,12 +6,37 @@ import { ImPlus } from "react-icons/im";
 import data from "../../assets/sealsCodes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function CreateCylinderModal({ cart, setCart, parentSetShow }) {
   const [show, setShow] = useState(false);
   const [sealsCodes, SetSealsCodes] = useState("");
   const [workForcePrice, setWorkForcePrice] = useState(1200);
   const [quantity, setQuantity] = useState(1);
+  const [data, setData] = useState([]);
+
+  const token = useSelector((state) => state.token.value);
+
+  async function checkPrices() {
+    try {
+      const response = await axios({
+        method: "get",
+        // baseURL: `${process.env.REACT_APP_API_BASE}/`,
+        baseURL: `http://localhost:5000/api/v1/seals/`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setData(response.data.list);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    checkPrices();
+  }, []);
+
   const createCylinder = () => {
     const sealCodeArray = sealsCodes.split("\n");
     const sealArray = sealCodeArray.map((seal) => {
@@ -23,7 +48,7 @@ function CreateCylinderModal({ cart, setCart, parentSetShow }) {
         check = false;
         return undefined;
       }
-      return seal.type + " " + seal.size;
+      return seal.pack + " " + seal.size;
     });
 
     let sealSum = 0;
