@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+
+import { HiSquaresPlus } from "react-icons/hi2";
 import { ImPlus } from "react-icons/im";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -68,7 +70,7 @@ function CreateBulkPriceModal({ setData }) {
 
   return (
     <>
-      <ImPlus onClick={handleShow} />
+      <HiSquaresPlus onClick={handleShow} />
 
       <Modal
         show={show}

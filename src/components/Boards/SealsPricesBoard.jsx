@@ -8,8 +8,8 @@ import DeleteModal from "../DeleteModal";
 import FilterModal from "../FilterModal";
 import { RiFilterOffFill } from "react-icons/ri";
 import CreateSealModal from "../CreateModals/CreateSealsModal";
-import PriceEditModal from "../EditModals/PriceEditModal";
-import PriceModal from "../viewModal/PriceModal";
+import SealEditModal from "../EditModals/SealEditModal";
+import SealModal from "../viewModal/SealsModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CreateBulkSealsModal from "../CreateModals/CreateBulkSealsModal";
@@ -162,8 +162,8 @@ function Boards({ props }) {
                     <td className="tdBoard">{code}</td>
                     <td className="tdBoard">{price}</td>
                     <td className="tdBoard tdacciones">
-                      <PriceModal id={_id} />
-                      <PriceEditModal
+                      <SealModal id={_id} />
+                      <SealEditModal
                         className="actions"
                         props={{
                           pack,
