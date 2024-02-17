@@ -179,3 +179,20 @@
 .pricebar button {
   margin: 5px;
 }
+
+.pagination-div {
+  margin: 0px auto 20px auto;
+  width: fit-content;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 10px 10px;
+}
+.pagination-div svg {
+  font-size: 2rem;
+}
+.pagination-div svg:hover {
+  color: rgb(39, 171, 138);
+  transition: 300ms;
+  cursor: pointer;
+}
