@@ -15,8 +15,11 @@ import PrintCustomerModal from "../PrintModals/PrintCustomerModal";
 import ColorSelectModal from "../EditModals/ColorSelectModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 
 function Boards({ props, setPrintRender, printData, setPrintData }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [tasks, setTasks] = useState(null);
   const [sort, setSort] = useState("pack");
   const [filters, setFilters] = useState("");
@@ -34,16 +37,17 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
 
   const token = useSelector((state) => state.token.value);
 
-  async function getTasks() {
+  async function getTasks(page) {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}&page=${page}&pageSize=50${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
+      setTotalPages(response.data.totalPages);
       setTasks(response.data);
     } catch (error) {
       console.log(error);
@@ -112,12 +116,15 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      getTasks();
+      getTasks(currentPage);
     }, 50);
     return () => clearTimeout(timer);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sort, data]);
+  }, [filters, sort, data, currentPage]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sort]);
 
   function filter(target) {
     target;
@@ -154,9 +161,33 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
   function sorter(param) {
     setSort(param);
   }
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="tablecontainer">
+      <div className="pagination-div">
+        <MdNavigateBefore
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        ></MdNavigateBefore>
+        <span>
+          {currentPage}/{totalPages}
+        </span>
+        <MdNavigateNext
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+        ></MdNavigateNext>
+      </div>
       <table className="customerBoard">
         <thead>
           <tr className="trBoard">
