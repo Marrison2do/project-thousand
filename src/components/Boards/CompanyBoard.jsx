@@ -14,8 +14,11 @@ import ColorSelectModal from "../EditModals/ColorSelectModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CreateFilledCompanyModal from "../CreateModals/CreateFilledCompany";
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 
 function Boards({ setPrintRender, printData, setPrintData }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [companies, setCompanies] = useState(null);
   const [sort, setSort] = useState("updatedAt");
   const [filters, setFilters] = useState("");
@@ -30,16 +33,17 @@ function Boards({ setPrintRender, printData, setPrintData }) {
 
   const token = useSelector((state) => state.token.value);
 
-  async function getCompanies() {
+  async function getCompanies(page) {
     try {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/companies?sort=${sort}${filters}`,
+        baseURL: `http://localhost:5000/api/v1/companies?sort=${sort}&page=${page}&pageSize=50${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
       });
+      setTotalPages(response.data.totalPages);
       setCompanies(response.data);
     } catch (error) {
       console.log(error);
@@ -94,9 +98,9 @@ function Boards({ setPrintRender, printData, setPrintData }) {
   }
 
   useEffect(() => {
-    getCompanies();
+    getCompanies(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sort, data]);
+  }, [filters, sort, data, currentPage]);
 
   function filter(target) {
     target;
@@ -109,6 +113,10 @@ function Boards({ setPrintRender, printData, setPrintData }) {
         olderUpdateThan
     );
   }
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sort]);
+
   useEffect(() => {
     filter();
   }, [
@@ -129,9 +137,35 @@ function Boards({ setPrintRender, printData, setPrintData }) {
   function sorter(param) {
     setSort(param);
   }
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="tablecontainer">
+      {totalPages > 1 && (
+        <div className="pagination-div">
+          <MdNavigateBefore
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          ></MdNavigateBefore>
+          <span>
+            {currentPage}/{totalPages}
+          </span>
+          <MdNavigateNext
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          ></MdNavigateNext>
+        </div>
+      )}
       <table className="customerBoard">
         <thead>
           <tr className="trBoard">

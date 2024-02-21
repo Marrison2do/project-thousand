@@ -182,19 +182,21 @@ function Boards({ props }) {
 
   return (
     <div className="tablecontainer">
-      <div className="pagination-div">
-        <MdNavigateBefore
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        ></MdNavigateBefore>
-        <span>
-          {currentPage}/{totalPages}
-        </span>
-        <MdNavigateNext
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        ></MdNavigateNext>
-      </div>
+      {totalPages > 1 && (
+        <div className="pagination-div">
+          <MdNavigateBefore
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          ></MdNavigateBefore>
+          <span>
+            {currentPage}/{totalPages}
+          </span>
+          <MdNavigateNext
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          ></MdNavigateNext>
+        </div>
+      )}
 
       <table className="customerBoard">
         <thead>
