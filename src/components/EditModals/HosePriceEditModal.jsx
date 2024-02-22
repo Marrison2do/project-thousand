@@ -49,6 +49,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 1/4") {
       data.oneFourth.PHC = value;
     }
+    if (name == "Espiga 1/4") {
+      data.oneFourth.Espiga = value;
+    }
     if (name == "Ojo 1/4") {
       data.oneFourth.OJO = value;
     }
@@ -70,6 +73,9 @@ function HosePriceEditModal({ props, setData }) {
     }
     if (name == "PHC 3/8") {
       data.threeEight.PHC = value;
+    }
+    if (name == "Espiga 3/8") {
+      data.threeEight.Espiga = value;
     }
     if (name == "Ojo 3/8") {
       data.threeEight.OJO = value;
@@ -93,6 +99,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 1/2") {
       data.half.PHC = value;
     }
+    if (name == "Espiga 1/2") {
+      data.half.Espiga = value;
+    }
     if (name == "Ojo 1/2") {
       data.half.OJO = value;
     }
@@ -115,6 +124,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 5/8") {
       data.fiveEight.PHC = value;
     }
+    if (name == "Espiga 5/8") {
+      data.fiveEight.Espiga = value;
+    }
     if (name == "Recuperación 5/8") {
       data.fiveEight.rec = value;
     }
@@ -133,6 +145,9 @@ function HosePriceEditModal({ props, setData }) {
     }
     if (name == "PHC 3/4") {
       data.threeFourth.PHC = value;
+    }
+    if (name == "Espiga 3/4") {
+      data.threeFourth.Espiga = value;
     }
     if (name == "Recuperación 3/4") {
       data.threeFourth.rec = value;
@@ -153,6 +168,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 1'") {
       data.inch.PHC = value;
     }
+    if (name == "Espiga 1'") {
+      data.inch.Espiga = value;
+    }
     if (name == "Recuperación 1'") {
       data.inch.rec = value;
     }
@@ -171,6 +189,9 @@ function HosePriceEditModal({ props, setData }) {
     }
     if (name == "PHC 5/8 R12") {
       data.fiveEightRTwelve.PHC = value;
+    }
+    if (name == "Espiga 5/8 R12") {
+      data.fiveEightRTwelve.Espiga = value;
     }
     if (name == "Recuperación 5/8 R12") {
       data.fiveEightRTwelve.rec = value;
@@ -191,6 +212,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 3/4 R12") {
       data.threeFourthRTwelve.PHC = value;
     }
+    if (name == "Espiga 3/4 R12") {
+      data.threeFourthRTwelve.Espiga = value;
+    }
     if (name == "Recuperación 3/4 R12") {
       data.threeFourthRTwelve.rec = value;
     }
@@ -209,6 +233,9 @@ function HosePriceEditModal({ props, setData }) {
     }
     if (name == "PHC 1' R12") {
       data.inchRTwelve.PHC = value;
+    }
+    if (name == "Espiga 1' R12") {
+      data.inchRTwelve.Espiga = value;
     }
     if (name == "Recuperación 1' R12") {
       data.inchRTwelve.rec = value;
@@ -229,6 +256,9 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 3/4 R13") {
       data.threeFourthRThirteen.PHC = value;
     }
+    if (name == "Espiga 3/4 R13") {
+      data.threeFourthRThirteen.Espiga = value;
+    }
     if (name == "Recuperación 3/4 R13") {
       data.threeFourthRThirteen.rec = value;
     }
@@ -247,6 +277,9 @@ function HosePriceEditModal({ props, setData }) {
     }
     if (name == "PHC 3/4 Xt-Flex R12") {
       data.xtFlexRTwelve.PHC = value;
+    }
+    if (name == "Espiga 3/4 Xt-Flex R12") {
+      data.xtFlexRTwelve.Espiga = value;
     }
     if (name == "Recuperación 3/4 Xt-Flex R12") {
       data.xtFlexRTwelve.rec = value;
@@ -267,9 +300,13 @@ function HosePriceEditModal({ props, setData }) {
     if (name == "PHC 3/4 Xt-Flex R13") {
       data.xtFlexRThirteen.PHC = value;
     }
+    if (name == "Espiga 3/4 Xt-Flex R13") {
+      data.xtFlexRThirteen.Espiga = value;
+    }
     if (name == "Recuperación 3/4 Xt-Flex R13") {
       data.xtFlexRThirteen.rec = value;
     }
+
     console.log(data);
     return;
   }

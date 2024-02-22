@@ -129,6 +129,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.oneFourth.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 1/4",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Ojo : USD {data.oneFourth.OJO}
                 <HosePriceEditModal
                   props={{
@@ -241,6 +256,21 @@ const HosePricesBoard = () => {
                     check,
                     setCheck,
                     name: "PHC 3/8",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
+                Espiga : USD {data.threeEight.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/8",
                   }}
                 />
               </td>
@@ -365,6 +395,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.half.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 1/2",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Ojo : USD {data.half.OJO}
                 <HosePriceEditModal
                   props={{
@@ -483,6 +528,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.fiveEight.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 5/8",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Recuperación : USD {data.fiveEight.rec}
                 <HosePriceEditModal
                   props={{
@@ -580,6 +640,21 @@ const HosePricesBoard = () => {
                     check,
                     setCheck,
                     name: "PHC 3/4",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
+                Espiga : USD {data.threeFourth.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/4",
                   }}
                 />
               </td>
@@ -689,6 +764,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.inch.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 1'",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Recuperación : USD {data.inch.rec}
                 <HosePriceEditModal
                   props={{
@@ -786,6 +876,21 @@ const HosePricesBoard = () => {
                     check,
                     setCheck,
                     name: "PHC 5/8 R12",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
+                Espiga : USD {data.fiveEightRTwelve.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 5/8 R12",
                   }}
                 />
               </td>
@@ -895,6 +1000,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.threeFourthRTwelve.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/4 R12",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Recuperación : USD {data.threeFourthRTwelve.rec}
                 <HosePriceEditModal
                   props={{
@@ -992,6 +1112,21 @@ const HosePricesBoard = () => {
                     check,
                     setCheck,
                     name: "PHC 1' R12",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
+                Espiga : USD {data.inchRTwelve.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 1' R12",
                   }}
                 />
               </td>
@@ -1101,6 +1236,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.threeFourthRThirteen.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/4 R13",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Recuperación : USD {data.threeFourthRThirteen.rec}
                 <HosePriceEditModal
                   props={{
@@ -1204,6 +1354,21 @@ const HosePricesBoard = () => {
             </tr>
             <tr className="trBoard">
               <td className="tdBoard">
+                Espiga : USD {data.xtFlexRTwelve.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/4 Xt-Flex R12",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
                 Recuperación : USD {data.xtFlexRTwelve.rec}
                 <HosePriceEditModal
                   props={{
@@ -1298,6 +1463,21 @@ const HosePricesBoard = () => {
                     check,
                     setCheck,
                     name: "PHC 3/4 Xt-Flex R13",
+                  }}
+                />
+              </td>
+            </tr>
+            <tr className="trBoard">
+              <td className="tdBoard">
+                Espiga : USD {data.xtFlexRThirteen.Espiga}
+                <HosePriceEditModal
+                  props={{
+                    data,
+                    setData,
+                    dataId,
+                    check,
+                    setCheck,
+                    name: "Espiga 3/4 Xt-Flex R13",
                   }}
                 />
               </td>

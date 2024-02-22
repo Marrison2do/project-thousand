@@ -44,7 +44,7 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
   }, []);
 
   const createHose = () => {
-    const { PM, PH, PHC, OJO } = hoseSize;
+    const { PM, PH, PHC, OJO, Espiga } = hoseSize;
 
     let check = true;
     const fittingsArray = fittings.toUpperCase().split("\n");
@@ -64,10 +64,13 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
         return PHC * singleItem[0];
       if (singleItem[1] === "OJO" && !isNaN(singleItem[0]))
         return OJO * singleItem[0];
+      if (singleItem[1] === "ESPIGA" && !isNaN(singleItem[0]))
+        return Espiga * singleItem[0];
       if (singleItem[0] === "PM" && singleItem.length == 1) return PM;
       if (singleItem[0] === "PH" && singleItem.length == 1) return PH;
       if (singleItem[0] === "PHC" && singleItem.length == 1) return PHC;
       if (singleItem[0] === "OJO" && singleItem.length == 1) return OJO;
+      if (singleItem[0] === "ESPIGA" && singleItem.length == 1) return Espiga;
       check = false;
       return undefined;
     });
