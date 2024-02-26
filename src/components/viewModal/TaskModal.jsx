@@ -34,7 +34,10 @@ function EntityModal({ id }) {
   };
   const handleHour = (utcHour) => {
     const parsedUtcHour = parseInt(utcHour);
-    return parsedUtcHour - 3;
+    if (parsedUtcHour >= 3) {
+      return parsedUtcHour - 3;
+    }
+    return parsedUtcHour;
   };
 
   const parsedDate = (date) => {
@@ -42,9 +45,15 @@ function EntityModal({ id }) {
     const month = date?.substring(5, 7);
     const day = date?.substring(8, 10);
     const utcHour = date?.substring(11, 13);
-    const hour = handleHour(day, month, utcHour);
+    const hour = handleHour(utcHour);
     const minutes = date?.substring(14, 16);
     return `${day}/${month}/${year} ${hour}:${minutes}`;
+  };
+  const handleType = (string) => {
+    if (string === "debt") {
+      return "Debe";
+    }
+    return "Paga";
   };
 
   return (
@@ -59,7 +68,7 @@ function EntityModal({ id }) {
           <div className="dataContainer">
             <div className="singleData">
               <h5>Tipo:</h5>
-              <p>{task?.type}</p>
+              <p>{handleType(task?.type)}</p>
             </div>
             <div className="singleData">
               <h5>Descripcion:</h5>

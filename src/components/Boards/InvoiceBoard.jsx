@@ -24,7 +24,7 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [invoices, setInvoices] = useState(null);
-  const [sort, setSort] = useState("number");
+  const [sort, setSort] = useState("-serial");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");

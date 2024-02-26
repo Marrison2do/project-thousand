@@ -13,6 +13,7 @@ function CreateTaskModal({ setData, props }) {
   const [customers, setCustomers] = useState(null);
   const [customersName, setCustomersName] = useState(props?.name || "");
   const [selectedCustomer, setSelectedCustomer] = useState(props?._id || "");
+  const [date, setDate] = useState(null);
   const [description, setDescription] = useState("");
   const [comment, setComment] = useState("");
   const [price, setPrice] = useState("");
@@ -52,6 +53,7 @@ function CreateTaskModal({ setData, props }) {
           currency: currency,
           customer: selectedCustomer,
           type: type,
+          createdAt: date,
         },
       });
       setData(response);
@@ -89,6 +91,7 @@ function CreateTaskModal({ setData, props }) {
     setCustomersName(props?.name || "");
     setSelectedCustomer(props?._id || "");
     setDescription("");
+    setDate(null);
   };
   const handleShow = () => {
     cleanForm();
@@ -129,6 +132,13 @@ function CreateTaskModal({ setData, props }) {
               <Form.Control
                 type="text"
                 onChange={(e) => setComment(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput6">
+              <Form.Label>Fecha de Emision</Form.Label>
+              <Form.Control
+                type="date"
+                onChange={(e) => setDate(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

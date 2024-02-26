@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { ImPlus } from "react-icons/im";
+import { HiSquaresPlus } from "react-icons/hi2";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -86,7 +86,7 @@ function createFilledCustomerModal({ setData }) {
 
   return (
     <>
-      <ImPlus onClick={handleShow} />
+      <HiSquaresPlus onClick={handleShow} />
 
       <Modal
         show={show}

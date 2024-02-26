@@ -47,10 +47,10 @@ const CompanyPrintSheet = ({ setPrintRender, printData, setPrintData }) => {
   }
 
   function CurrencyHandler(item) {
-    if (item.currency === "UYU" && item.price) {
+    if (item.currency === "UYU" && item.price !== false) {
       return UYUFormat(item.price);
     }
-    if (item.currency == "USD" && item.price) {
+    if (item.currency == "USD" && item.price !== false) {
       return USDFormat(item.price);
     }
     return;
