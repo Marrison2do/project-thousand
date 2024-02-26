@@ -21,7 +21,7 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [tasks, setTasks] = useState(null);
-  const [sort, setSort] = useState("pack");
+  const [sort, setSort] = useState(props?.sort || "-createdAt");
   const [filters, setFilters] = useState("");
   const [currency, setCurrency] = useState("");
   const [numericFilters, setNumericFilters] = useState("");
