@@ -96,6 +96,7 @@ function CustomerModal({
               _id: props._id,
               modal: props.modal,
               sort: "createdAt",
+              pageSize: 200,
             }}
             setPrintRender={setPrintRender}
             printData={printData}

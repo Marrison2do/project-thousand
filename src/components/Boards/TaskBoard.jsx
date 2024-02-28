@@ -20,6 +20,7 @@ import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(props?.pageSize || 50);
   const [tasks, setTasks] = useState(null);
   const [sort, setSort] = useState(props?.sort || "-createdAt");
   const [filters, setFilters] = useState("");
@@ -42,7 +43,7 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}&page=${page}&pageSize=50${filters}`,
+        baseURL: `http://localhost:5000/api/v1/tasks?sort=${sort}&page=${page}&pageSize=${pageSize}${filters}`,
         headers: {
           Authorization: "Bearer " + token,
         },
