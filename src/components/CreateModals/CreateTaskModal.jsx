@@ -53,7 +53,7 @@ function CreateTaskModal({ setData, props }) {
           currency: currency,
           customer: selectedCustomer,
           type: type,
-          createdAt: date,
+          date: date,
         },
       });
       setData(response);
@@ -85,7 +85,6 @@ function CreateTaskModal({ setData, props }) {
   };
 
   const cleanForm = () => {
-    setCustomers("");
     setCurrency("UYU");
     setPrice("");
     setCustomersName(props?.name || "");
@@ -186,7 +185,7 @@ function CreateTaskModal({ setData, props }) {
               />
               <Form.Select
                 type="select"
-                defaultValue={props?.name}
+                defaultValue={props?.name || ""}
                 onChange={(e) => setSelectedCustomer(e.target.value)}
               >
                 <option value={props?._id || ""}>{props?.name || ""}</option>

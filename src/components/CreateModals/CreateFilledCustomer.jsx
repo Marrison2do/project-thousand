@@ -24,8 +24,7 @@ function createFilledCustomerModal({ setData }) {
       let taskSplit = taskArray[i].split("\t");
       taskSplit[0] = taskSplit[0].slice(0, 10) + "T19:00:00.148Z";
       taskArray[i] = {
-        createdAt: taskSplit[0],
-        updatedAt: taskSplit[0],
+        date: taskSplit[0],
         description: taskSplit[1],
         price: taskSplit[2],
         currency: taskSplit[3],

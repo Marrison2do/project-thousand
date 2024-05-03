@@ -299,6 +299,7 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
               {tasks.list.map((item, index) => {
                 const {
                   description,
+                  date,
                   comment,
                   price,
                   currency,
@@ -315,7 +316,9 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
                   if (item == "payment") return "Paga";
                 };
 
-                const dateResult = dateHandler(createdAt);
+                const dateResult = date
+                  ? dateHandler(date)
+                  : dateHandler(createdAt);
                 return (
                   <tr
                     className={"trBoard" + rowClass}

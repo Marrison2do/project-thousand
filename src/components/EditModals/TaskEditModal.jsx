@@ -15,6 +15,7 @@ function TaskEditModal({ props, setData }) {
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("");
   const [pack, setPack] = useState("");
+  const [date, setDate] = useState("");
 
   const handleClose = () => {
     setShow(false);
@@ -36,6 +37,7 @@ function TaskEditModal({ props, setData }) {
     if (description) formBody.description = description;
     if (price) formBody.price = price;
     if (currency) formBody.currency = currency;
+    if (date) formBody.date = date;
     try {
       const response = await axios({
         method: "patch",
@@ -74,6 +76,13 @@ function TaskEditModal({ props, setData }) {
                 type="text"
                 onChange={(e) => setComment(e.target.value)}
                 defaultValue={props.comment}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput6">
+              <Form.Label>Fecha de Emision</Form.Label>
+              <Form.Control
+                type="date"
+                onChange={(e) => setDate(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
