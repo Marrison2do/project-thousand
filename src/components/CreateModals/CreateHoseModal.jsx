@@ -28,7 +28,7 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
       const response = await axios({
         method: "get",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
-        baseURL: `http://localhost:5000/api/v1/globals/655dfbc4423b5e04849a7c93`,
+        baseURL: `http://localhost:5000/api/v1/globals/65f8e3a8e05dcb4578657cb3`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -141,7 +141,7 @@ function CreateItemModal({ cart, setCart, parentSetShow, exchange }) {
     setQuantity(1);
     setFittings("");
     setHoseLength(0);
-    setHoseSize(priceList.oneFourth);
+    setHoseSize(priceList?.oneFourth);
   };
 
   const handleShow = () => {

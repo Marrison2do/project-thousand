@@ -39,6 +39,7 @@ function CreateTaskModal({ setData, props }) {
   }
   async function createTask() {
     try {
+      const today = Date.now();
       const response = await axios({
         method: "post",
         // baseURL: `${process.env.REACT_APP_API_BASE}/`,
@@ -53,7 +54,7 @@ function CreateTaskModal({ setData, props }) {
           currency: currency,
           customer: selectedCustomer,
           type: type,
-          date: date,
+          date: date || today,
         },
       });
       setData(response);

@@ -89,10 +89,12 @@ function EntityModal({ id }) {
               <h5>Creado por:</h5>
               <p>{task?.createdBy.name}</p>
             </div>
-            <div className="singleData">
-              <h5>Actualizado por:</h5>
-              <p>{task?.updatedBy?.name}</p>
-            </div>
+            {task?.updatedBy && (
+              <div className="singleData">
+                <h5>Actualizado por:</h5>
+                <p>{task?.updatedBy?.name}</p>
+              </div>
+            )}
             <div className="singleData">
               <h5>Feacha de creacion:</h5>
               <p>{parsedDate(task?.createdAt)}</p>
