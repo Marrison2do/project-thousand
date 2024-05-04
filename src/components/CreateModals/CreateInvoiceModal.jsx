@@ -34,6 +34,7 @@ function CreateInvoiceModal({ setData, props }) {
         },
       });
       setCompanies(response.data);
+      console.log();
     } catch (error) {
       toast.error("Error interno");
     }
@@ -82,7 +83,6 @@ function CreateInvoiceModal({ setData, props }) {
   };
 
   const cleanForm = () => {
-    setCompanies("");
     setCurrency("UYU");
     setPrice("");
     setCompaniesName(props?._id || "");
@@ -164,7 +164,7 @@ function CreateInvoiceModal({ setData, props }) {
               <Form.Control
                 type="text"
                 onChange={(e) => setCompaniesName(e.target.value)}
-                defaultValue={props?.name}
+                defaultValue={props?.name || ""}
               />
               <Form.Select
                 type="select"

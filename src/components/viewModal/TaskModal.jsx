@@ -47,6 +47,7 @@ function EntityModal({ id }) {
     const utcHour = date?.substring(11, 13);
     const hour = handleHour(utcHour);
     const minutes = date?.substring(14, 16);
+    if (date == task?.date) return `${day}/${month}/${year}`;
     return `${day}/${month}/${year} ${hour}:${minutes}`;
   };
   const handleType = (string) => {
@@ -95,6 +96,10 @@ function EntityModal({ id }) {
                 <p>{task?.updatedBy?.name}</p>
               </div>
             )}
+            <div className="singleData">
+              <h5>Feacha de Emision:</h5>
+              <p>{parsedDate(task?.date)}</p>
+            </div>
             <div className="singleData">
               <h5>Feacha de creacion:</h5>
               <p>{parsedDate(task?.createdAt)}</p>
