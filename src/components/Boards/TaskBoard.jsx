@@ -35,6 +35,7 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
   const [modal, setModal] = useState(props?.modal || false);
   const [pack, setPack] = useState("");
   const [selectedColor, setSelectedColor] = useState(null);
+  const [renderDate, setRenderDate] = useState("createdDate");
 
   const token = useSelector((state) => state.token.value);
 
@@ -194,17 +195,32 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
       <table className="customerBoard">
         <thead>
           <tr className="trBoard">
-            <th className="thBoard date">
-              <h5>Fecha</h5>
-              <FaArrowUp onClick={() => sorter("-createdAt")} />
-              <FaArrowDown onClick={() => sorter("createdAt")} />
-              <FilterModal
-                value="createdAt"
-                name="Fecha"
-                nameState={setNewerThan}
-                nameState2={setOlderThan}
-              />
-            </th>
+            {renderDate == "actualDate" && (
+              <th className="thBoard date">
+                <h5 title="Realizacion">Fecha</h5>
+                <FaArrowUp onClick={() => sorter("-createdAt")} />
+                <FaArrowDown onClick={() => sorter("createdAt")} />
+                <FilterModal
+                  value="createdAt"
+                  name="Fecha"
+                  nameState={setNewerThan}
+                  nameState2={setOlderThan}
+                />
+              </th>
+            )}
+            {renderDate == "createdDate" && (
+              <th className="thBoard date">
+                <h5 title="Procesado">Fecha</h5>
+                <FaArrowUp onClick={() => sorter("-createdAt")} />
+                <FaArrowDown onClick={() => sorter("createdAt")} />
+                <FilterModal
+                  value="createdAt"
+                  name="Fecha"
+                  nameState={setNewerThan}
+                  nameState2={setOlderThan}
+                />
+              </th>
+            )}
             <th className="thBoard">
               <h5>Descripcion</h5>
               <FaArrowUp onClick={() => sorter("-description")} />
@@ -316,9 +332,12 @@ function Boards({ props, setPrintRender, printData, setPrintData }) {
                   if (item == "payment") return "Paga";
                 };
 
-                const dateResult = date
-                  ? dateHandler(date)
-                  : dateHandler(createdAt);
+                const dateResult =
+                  renderDate == "actualDate"
+                    ? dateHandler(date)
+                    : renderDate == "createdDate"
+                    ? dateHandler(createdAt)
+                    : dateHandler(updadedAt);
                 return (
                   <tr
                     className={"trBoard" + rowClass}
